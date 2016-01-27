@@ -26,20 +26,20 @@ import java.util.Properties;
 @EnableJpaRepositories
 public class TestConfig {
 
-    @Value(value = "${db.driverClassName}")
+    @Value("${db.driverClassName}")
     private String dbDriverClassName;
-    @Value(value = "${db.url}")
+    @Value("${db.url}")
     private String dbUrl;
-    @Value(value = "${db.username}")
+    @Value("${db.username}")
     private String dbUsername;
-    @Value(value = "${db.password}")
+    @Value("${db.password}")
     private String dbPassword;
 
-    @Value(value = "${db.ddl-auto:update}")
+    @Value("${db.ddl-auto:update}")
     private String dbHbm2ddl;
-    @Value(value = "${db.show-sql:false}")
+    @Value("${db.show-sql:false}")
     private String dbShowSql;
-    @Value(value = "${hibernate.dialect}")
+    @Value("${hibernate.dialect}")
     private String dbDialect;
 
     @Bean

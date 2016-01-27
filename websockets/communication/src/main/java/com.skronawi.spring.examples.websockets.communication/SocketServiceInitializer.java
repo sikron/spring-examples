@@ -6,7 +6,7 @@ public class SocketServiceInitializer extends AbstractAnnotationConfigDispatcher
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{RestService.class};
+        return new Class[]{SocketServiceConfig.class};
     }
 
     @Override

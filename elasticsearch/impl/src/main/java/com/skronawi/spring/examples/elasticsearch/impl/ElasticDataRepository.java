@@ -1,4 +1,9 @@
 package com.skronawi.spring.examples.elasticsearch.impl;
 
-public class ElasticDataRepository {
+import org.springframework.data.elasticsearch.repository.ElasticsearchCrudRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ElasticDataRepository extends ElasticsearchCrudRepository<ElasticData, String> {
+
 }

@@ -4,9 +4,9 @@ import com.skronawi.spring.examples.jpa.api.ModelFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ElasticModelFactory implements ModelFactory<JpaData> {
+public class ElasticModelFactory implements ModelFactory<ElasticData> {
 
-    public JpaData createData() {
-        return new JpaData();
+    public ElasticData createData() {
+        return new ElasticData();
     }
 }

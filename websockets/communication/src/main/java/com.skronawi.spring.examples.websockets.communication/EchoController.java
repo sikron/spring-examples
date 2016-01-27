@@ -1,9 +1,16 @@
 package com.skronawi.spring.examples.websockets.communication;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@RestController
+@Controller
 public class EchoController {
 
-    public void
+    @MessageMapping("/echo")
+    @SendTo("/topic/echos")
+    public String post(@RequestBody String message){
+        return message;
+    }
 }

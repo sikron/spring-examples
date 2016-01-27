@@ -19,19 +19,3 @@ public class RestServiceInitializer extends AbstractAnnotationConfigDispatcherSe
         return new String[]{"/"};
     }
 }
-
-//public class RestServiceInitializer implements WebApplicationInitializer {
-//
-//    public void onStartup(ServletContext container) throws ServletException {
-//
-//        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-//        ctx.register(RestService.class);
-//        ctx.setServletContext(container);
-//
-//        ServletRegistration.Dynamic servlet = container.addServlet("dispatcher", new DispatcherServlet(ctx));
-//
-//        servlet.setLoadOnStartup(1);
-//        servlet.addMapping("/");
-//    }
-//
-//}

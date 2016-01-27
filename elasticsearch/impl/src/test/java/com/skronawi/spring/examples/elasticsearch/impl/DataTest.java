@@ -1,9 +1,5 @@
 package com.skronawi.spring.examples.elasticsearch.impl;
 
-import com.skronawi.spring.examples.jpa.impl.JpaData;
-import com.skronawi.spring.examples.jpa.impl.JpaDataPersistence;
-import com.skronawi.spring.examples.jpa.impl.JpaModelFactory;
-import com.skronawi.spring.examples.jpa.impl.TestConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -17,25 +13,25 @@ import java.util.Set;
 public class DataTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private JpaDataPersistence persistence;
+    private ElasticDataPersistence persistence;
     @Autowired
-    private JpaModelFactory modelFactory;
+    private ElasticModelFactory modelFactory;
 
     @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
-        Set<JpaData> all = persistence.getAll();
-        for (JpaData jpaData : all) {
-            persistence.delete(jpaData.getId());
+        Set<ElasticData> all = persistence.getAll();
+        for (ElasticData ElasticData : all) {
+            persistence.delete(ElasticData.getId());
         }
     }
 
     @Test
     public void testCreateGet() throws Exception {
 
-        JpaData data = modelFactory.createData();
+        ElasticData data = modelFactory.createData();
         data.setData("this is a test");
 
-        JpaData createdData = persistence.create(data);
+        ElasticData createdData = persistence.create(data);
 
         Assert.assertNotNull(createdData.getId());
         Assert.assertEquals(createdData.getData(), data.getData());
@@ -44,27 +40,27 @@ public class DataTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testDelete() throws Exception {
 
-        JpaData data = modelFactory.createData();
+        ElasticData data = modelFactory.createData();
         data.setData("this is a test");
 
-        JpaData createdData = persistence.create(data);
+        ElasticData createdData = persistence.create(data);
 
         persistence.delete(createdData.getId());
 
-        JpaData deleted = persistence.get(createdData.getId());
+        ElasticData deleted = persistence.get(createdData.getId());
         Assert.assertNull(deleted);
     }
 
     @Test
-    public void testUpdate() throws Exception{
+    public void testUpdate() throws Exception {
 
-        JpaData data = modelFactory.createData();
+        ElasticData data = modelFactory.createData();
         data.setData("this is a test");
 
-        JpaData createdData = persistence.create(data);
+        ElasticData createdData = persistence.create(data);
 
         createdData.setData("this is a updated test");
-        JpaData updatedData = persistence.update(createdData);
+        ElasticData updatedData = persistence.update(createdData);
 
         Assert.assertEquals(updatedData.getData(), "this is a updated test");
     }
