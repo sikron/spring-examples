@@ -8,16 +8,22 @@ import java.util.Set;
 
 public class DataMapper {
 
-    public static SimpleData fromPersistence(Data data){
+    public static SimpleData fromPersistence(Data data) {
+        if (null == data) {
+            return null;
+        }
         SimpleData simpleData = new SimpleData();
         simpleData.setData(data.getData());
         simpleData.setId(data.getId());
         return simpleData;
     }
 
-    public static Set<SimpleData> fromPersistence(Collection<Data> datas){
+    public static Set<SimpleData> fromPersistence(Collection<Data> datas) {
         HashSet<SimpleData> simpleDatas = new HashSet<SimpleData>();
-        for (Data data : datas){
+        if (null == datas || datas.isEmpty()) {
+            return simpleDatas;
+        }
+        for (Data data : datas) {
             simpleDatas.add(fromPersistence(data));
         }
         return simpleDatas;

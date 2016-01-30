@@ -17,7 +17,6 @@
         <module>bl-impl</module>
         <module>inmemory-persistence</module>
         <module>service</module>
-        <!--<module>service-boot</module>-->
     </modules>
 
 
