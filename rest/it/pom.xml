@@ -9,16 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rest-parent</artifactId>
+    <artifactId>it-parent</artifactId>
     <packaging>pom</packaging>
+
     <modules>
-        <module>communication</module>
-        <module>bl-api</module>
-        <module>bl-impl</module>
-        <module>inmemory-persistence</module>
-        <module>service</module>
-        <module>it</module>
+        <module>it-core</module>
+        <module>it-boot</module>
+        <module>it-mvcmock</module>
     </modules>
-
-
 </project>

@@ -1,11 +1,13 @@
 package com.skronawi.spring.examples.rest.service;
 
+import com.skronawi.spring.examples.rest.communication.Error;
 import com.skronawi.spring.examples.rest.communication.RestData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -53,11 +55,14 @@ public class RestBootIntegrationTest extends AbstractRestTest {
                 entity, RestData.class);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
         Assert.assertTrue(response.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
-        return response.getBody();
+        RestData createdRestData = response.getBody();
+        Assert.assertEquals(response.getHeaders().getLocation().toASCIIString(),
+                "http://localhost:" + port + "/data/" + createdRestData.getId());
+        return createdRestData;
     }
 
     @Override
-    protected Set<RestData> getAllAndAssertResponse() throws Exception {
+    protected Set<RestData> getAllAndAssertResponse() {
         ResponseEntity<Set<RestData>> response = restTemplate.exchange("http://localhost:" + port + "/data",
                 HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Set<RestData>>() {
                 });
@@ -67,7 +72,7 @@ public class RestBootIntegrationTest extends AbstractRestTest {
     }
 
     @Override
-    protected RestData getAndAssertResponse(String id) throws Exception {
+    protected RestData getAndAssertResponse(String id) {
         ResponseEntity<RestData> response = restTemplate.getForEntity("http://localhost:" + port + "/data/" + id,
                 RestData.class);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -76,14 +81,32 @@ public class RestBootIntegrationTest extends AbstractRestTest {
     }
 
     @Override
-    protected RestData updateAndAssertResponse(RestData restData) throws Exception {
+    protected RestData updateAndAssertResponse(RestData restData) {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
     @Override
-    protected void deleteAndAssertResponse(String id) throws Exception {
+    protected void deleteAndAssertResponse(String id) {
         ResponseEntity<String> response = restTemplate.exchange("http://localhost:" + port + "/data/" + id,
                 HttpMethod.GET, HttpEntity.EMPTY, String.class);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Override
+    protected void getAndNotFound(final String id) throws Exception {
+
+        //http://stackoverflow.com/questions/26676405/how-to-parse-the-response-body-in-java-when-the-http-request-has-return-status
+
+        try {
+            restTemplate.getForEntity("http://localhost:" + port + "/data/" + id,
+                    RestData.class);
+            Assert.fail("a exception should have occurred due to 404");
+        } catch (HttpStatusCodeException e) {
+            Error error = null;
+            error = objectMapper.readValue(e.getResponseBodyAsString(), Error.class);
+            Assert.assertTrue(e.getStatusCode() == HttpStatus.NOT_FOUND
+                    && error.getMessage().equals("Data not found by id " + id)
+                    && e.getResponseHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
+        }
     }
 }

@@ -36,7 +36,10 @@ public abstract class AbstractRestTest extends AbstractTestNGSpringContextTests 
         TestAssertions.assertContainsById(allRestDatas, retrievedRestData);
     }
 
-    //further tests here
+    @Test
+    public void notFound() throws Exception{
+        getAndNotFound("blub");
+    }
 
     protected abstract RestData createAndAssertResponse(RestData restData) throws Exception;
 
@@ -47,4 +50,6 @@ public abstract class AbstractRestTest extends AbstractTestNGSpringContextTests 
     protected abstract RestData updateAndAssertResponse(RestData restData) throws Exception;
 
     protected abstract void deleteAndAssertResponse(String id) throws Exception;
+
+    protected abstract void getAndNotFound(String id) throws Exception;
 }

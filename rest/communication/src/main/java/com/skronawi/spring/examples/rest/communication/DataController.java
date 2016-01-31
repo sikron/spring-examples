@@ -1,21 +1,25 @@
 package com.skronawi.spring.examples.rest.communication;
 
+import com.skronawi.spring.examples.rest.businesslogic.api.Data;
 import com.skronawi.spring.examples.rest.businesslogic.api.DataBusinessLogic;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Set;
 
 @RestController
+@RequestMapping(value = "/data")
 public class DataController {
 
     @Autowired
     private DataBusinessLogic dataBusinessLogic;
 
-    @RequestMapping(value = "/data",
-            method = RequestMethod.GET,
+    @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Set<RestData> getAll() {
@@ -23,27 +27,31 @@ public class DataController {
         return restDatas;
     }
 
-    @RequestMapping(value = "/data/{id}",
+    @RequestMapping(value = "{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public RestData get(@PathVariable("id") String id) {
-        RestData restData = DataMapper.toRest(dataBusinessLogic.get(id));
-        return restData;
+        Data data = dataBusinessLogic.get(id);
+        if (data == null){
+            throw new DataNotFoundException(id);
+        }
+        return DataMapper.toRest(data);
     }
 
-    @RequestMapping(value = "/data",
-            method = RequestMethod.POST,
+    @RequestMapping(method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public RestData create(@RequestBody RestData restData) {
+    public ResponseEntity create(@RequestBody RestData restData, UriComponentsBuilder builder) {
         RestData createdData = DataMapper.toRest(dataBusinessLogic.create(DataMapper.toBL(restData)));
-        return createdData;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(builder.path("/data/{id}").buildAndExpand(createdData.getId()).toUri());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<RestData>(createdData, headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/data/{id}",
+    @RequestMapping(value = "{id}",
             method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +61,7 @@ public class DataController {
         return updatedData;
     }
 
-    @RequestMapping(value = "/data/{id}",
+    @RequestMapping(value = "{id}",
             method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") String id) {
         dataBusinessLogic.delete(id);
