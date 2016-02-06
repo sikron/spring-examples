@@ -21,6 +21,7 @@
         <module>rest</module>
         <module>elasticsearch</module>
         <module>websockets</module>
+        <module>microservices</module>
     </modules>
 
 </project>
