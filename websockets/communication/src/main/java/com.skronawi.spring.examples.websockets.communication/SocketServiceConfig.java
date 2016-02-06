@@ -11,15 +11,15 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @Configuration
 @EnableWebSocketMessageBroker
 @ComponentScan(basePackages = "com.skronawi.spring.examples.websockets")
-@EnableWebMvc
 public class SocketServiceConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/topic"); //base endpoint for broker
+        config.setApplicationDestinationPrefixes("/app"); //base endpoint for messages to the app
     }
 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/echo").withSockJS();
+        registry.addEndpoint("/echo").withSockJS(); //the /app/echo endpoint
     }
 }

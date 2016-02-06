@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class EchoController {
 
-    @MessageMapping("/echo")
-    @SendTo("/topic/echos")
+    @MessageMapping("/echo")  //senders have to send to the app endpoint "echo", i.e. /app/echo as configured in SocketServiceConfig
+    @SendTo("/topic/echos") //message is relayed to the broker queue /topic/echos
     public String post(@RequestBody String message){
-        return message;
+        return "echo: " + message;
     }
 }
