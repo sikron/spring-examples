@@ -18,7 +18,8 @@ Many thx for that! :-)
 
 # What can it do?
 
-* start the websocket server via the maven jetty plugin, e.g. `mvn jetty:run`
+* start the websocket server in the `communication` module via the maven jetty plugin, e.g. `mvn jetty:run`
 * go to `http://localhost:8080/test.html`, connect and send greetings :-)
-* execute the `com.skronawi.spring.examples.websockets.communication.WebsocketIntegrationTest`. debug in the callback-methods!
+* or
+* just execute the `com.skronawi.spring.examples.websockets.communication.WebsocketIntegrationTest` and debug in the callback-methods to see what's going on
 * for the Integration Tests i use Spring Boot in order to initialize a real in-memory web app as MVCMock does not support websockets

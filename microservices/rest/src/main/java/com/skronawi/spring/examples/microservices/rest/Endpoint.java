@@ -7,9 +7,9 @@ import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 
-@EnableBinding(Sink.class)
-@IntegrationComponentScan
-@MessageEndpoint
+@EnableBinding(Sink.class)  //the sink endpoint of the message stream.
+@IntegrationComponentScan //needed for the @ServiceActivator to be bound
+@MessageEndpoint //Spring sets up the message stream
 public class Endpoint {
 
     @Autowired

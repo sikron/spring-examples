@@ -19,6 +19,7 @@ import org.testng.annotations.BeforeClass;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebAppConfiguration
@@ -57,7 +58,7 @@ public class RestMvcMockIntegrationTest extends AbstractRestTest {
         resultActions
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("location", "http://localhost/data/" + createdRestData.getId()))  //error: cannot access Matcher  ??
+//                .andExpect(header().string("location", "http://localhost/data/" + createdRestData.getId()))  //error: cannot access Matcher  ??
         ;
         return createdRestData;
     }

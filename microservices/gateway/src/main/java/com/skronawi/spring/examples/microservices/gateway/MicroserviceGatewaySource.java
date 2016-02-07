@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@EnableBinding(Source.class)
+@EnableBinding(Source.class) //the source endpoint of the message stream.
 @RestController
 public class MicroserviceGatewaySource {
 

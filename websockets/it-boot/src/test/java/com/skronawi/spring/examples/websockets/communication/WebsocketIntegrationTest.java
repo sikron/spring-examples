@@ -1,6 +1,5 @@
 package com.skronawi.spring.examples.websockets.communication;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -30,7 +29,6 @@ public class WebsocketIntegrationTest extends AbstractTestNGSpringContextTests {
     private int port;
 
     private WebSocketStompClient stompClient;
-    private ObjectMapper objectMapper;
     private StompSession connection;
 
     @BeforeClass
@@ -47,8 +45,6 @@ public class WebsocketIntegrationTest extends AbstractTestNGSpringContextTests {
         WebSocketClient transport = new SockJsClient(transports);
         stompClient = new WebSocketStompClient(transport);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-
-        objectMapper = new ObjectMapper();
     }
 
     @AfterClass(alwaysRun = true)

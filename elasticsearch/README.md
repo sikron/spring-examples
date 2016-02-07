@@ -1,7 +1,6 @@
 # Description
 
-This project is about how Spring Data supports Elasticsearch. There only exists a implementation module, which implements
- the interface of the `jpa` sibling project.
+This project is about how Spring Data supports Elasticsearch. There only exists a implementation module, which implements the interface of the `jpa` sibling project.
 
 # Purpose
 

@@ -11,6 +11,10 @@ import org.testng.annotations.Test;
 
 import java.util.Set;
 
+/**
+ * A abstract class containing all Integration Tests. It requires its subclasses to implement methods, according to the
+ * corresponding environment, e.g. MockMVC or Boot.
+ */
 public abstract class AbstractRestTest extends AbstractTestNGSpringContextTests {
 
     protected ObjectMapper objectMapper;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 
-@RefreshScope
+@RefreshScope //so that calls to '/refresh' pull modified configuration
 @RestController
 class MicroServiceRestServiceController {
 
@@ -30,6 +30,6 @@ class MicroServiceRestServiceController {
     }
 
     /*
-    the sink binding stuff from Endpoint would not work in here
+    the sink binding stuff from 'Endpoint' would not work in here. wyh?
      */
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@EnableCircuitBreaker
+@EnableCircuitBreaker //the hystrix circuit breaker is set up
 @RestController
 public class MicroserviceGatewayController {
 
@@ -35,6 +35,6 @@ public class MicroserviceGatewayController {
     }
 
     /*
-    the MicroserviceGatewaySource stuff would cause problems here. hystrix would not find the 'getAllFallback' any more
+    the MicroserviceGatewaySource stuff would cause problems here. hystrix would not find the 'getAllFallback' any more. why?
      */
 }

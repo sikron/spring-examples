@@ -8,7 +8,7 @@ import org.springframework.cloud.netflix.zuul.EnableZuulServer;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-//@EnableZuulProxy
+//@EnableZuulProxy //another example, i did not quite understand
 public class MicroserviceGatewayApplication {
 
     public static void main(String[] args) {
