@@ -15,7 +15,6 @@ public class JpaData implements Data {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
-    @Column(name = "data")
     private String data;
 
     public String getId() {

@@ -33,4 +33,8 @@ public class MicroserviceGatewayController {
     private Collection<String> getAllFallback() {
         return new ArrayList<>();
     }
+
+    /*
+    the MicroserviceGatewaySource stuff would cause problems here. hystrix would not find the 'getAllFallback' any more
+     */
 }

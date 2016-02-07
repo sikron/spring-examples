@@ -18,6 +18,10 @@ public class ElasticDataPersistence implements DataPersistence<ElasticData> {
 
         //without hibernate, @GeneratedValue is not available
         data.setId(UUID.randomUUID().toString());
+        /*
+        also for elasticsearch this upper id is just a attribute. as real id it uses a internal id, which is not
+        accessible here.
+        */
 
         ElasticData save = repository.save(data);
         return save;

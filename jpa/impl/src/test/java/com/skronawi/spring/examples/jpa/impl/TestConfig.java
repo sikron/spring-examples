@@ -20,10 +20,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@Configuration
-@ComponentScan({Constants.BASE_PACKAGE})
-@PropertySource("classpath:database.properties")
-@EnableJpaRepositories
+@Configuration  //a java configuration, which Spring can use to bootstrap the application
+@ComponentScan({Constants.BASE_PACKAGE}) //Spring scans the package for annotated classes
+@PropertySource("classpath:database.properties") //Spring reads these properties and can inject them into @Value annotated fields
+@EnableJpaRepositories //Spring provides implementations of @Repository annotated interfaces
 public class TestConfig {
 
     @Value("${db.driverClassName}")
@@ -84,6 +84,9 @@ public class TestConfig {
         return txManager;
     }
 
+    /*
+    this is needed for the @Value annotation to have effect
+     */
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();

@@ -15,6 +15,7 @@
     
     <modules>
         <module>communication</module>
+        <module>it-boot</module>
     </modules>
 
 </project>

@@ -13,8 +13,8 @@ import org.testng.annotations.Test;
 
 import java.util.Set;
 
-@ContextConfiguration(classes = TestConfig.class)
-public class DataTest extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(classes = TestConfig.class)  //Spring uses this configuration class for setting up the test environment
+public class DataTest extends AbstractTestNGSpringContextTests { //TestNG as test runner must have access to the Spring environment, thus the subclassing
 
     @Autowired
     private JpaDataPersistence persistence;
