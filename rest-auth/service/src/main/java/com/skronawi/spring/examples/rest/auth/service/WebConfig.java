@@ -7,7 +7,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.skronawi.spring.examples.rest.auth.service")
 public class WebConfig extends WebMvcConfigurerAdapter {
-
 }
