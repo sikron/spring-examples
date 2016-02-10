@@ -3,21 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>parent</artifactId>
+        <artifactId>rest-auth-parent</artifactId>
         <groupId>com.skronawi.spring-examples</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rest-parent</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>communication</module>
-        <module>bl-api</module>
-        <module>bl-impl</module>
-        <module>inmemory-persistence</module>
-        <module>service</module>
-        <module>it</module>
-    </modules>
+    <artifactId>rest-auth-it-mock</artifactId>
 
 </project>

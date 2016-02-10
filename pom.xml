@@ -22,6 +22,7 @@
         <module>elasticsearch</module>
         <module>websockets</module>
         <module>microservices</module>
+        <module>rest-auth</module>
     </modules>
 
 </project>
