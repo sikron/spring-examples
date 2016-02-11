@@ -9,6 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <packaging>war</packaging>
+
     <artifactId>rest-auth-service</artifactId>
 
     <dependencies>
@@ -42,7 +44,7 @@
                 <version>2.4</version>
                 <configuration>
                     <warSourceDirectory>service/src/main/webapp</warSourceDirectory>
-                    <warName>spring-rest-service-example</warName>
+                    <warName>spring-rest-auth-example</warName>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
