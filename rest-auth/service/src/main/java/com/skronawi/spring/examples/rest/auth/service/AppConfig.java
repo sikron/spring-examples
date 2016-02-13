@@ -11,6 +11,11 @@ public class AppConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new TryoutUserDetailsService();
+        return new TheUserDetailsService();
+    }
+
+    @Bean
+    public Treasure treasure(){
+        return new Treasure();
     }
 }

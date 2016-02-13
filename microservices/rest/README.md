@@ -4,6 +4,7 @@ This is a simple REST service with Spring Boot. It is bootstrapped with the `res
 There also its identification resides as `spring.application.name`. This is used by the config server to provide the right properties.
 
 # Features
+
 * It is configured via a Spring Cloud Config server. This config can be refreshed during runtime (see the `/configvalue` endpoint in the `MicroServiceRestServiceController`)
 * It can register itself on a Eureka service
 * It serves as a message sink for a Redis stream (see its properties in the config server for the id of the stream binding)
