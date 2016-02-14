@@ -23,6 +23,7 @@
         <module>websockets</module>
         <module>microservices</module>
         <module>rest-auth</module>
+        <module>rest-oauth</module>
     </modules>
 
 </project>

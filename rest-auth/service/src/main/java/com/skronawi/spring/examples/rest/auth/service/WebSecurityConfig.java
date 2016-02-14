@@ -22,6 +22,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+
+
     //several configure(AuthenticationManagerBuilder auth) -------------------------------------------------------------
 
     //use a backend backed UserDetailsService to handle authentication
@@ -39,6 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .withUser("donald").password("d8ck").roles("USER", "ADMIN");
 //    }
 
+
+
     //several configure(HttpSecurity http) -----------------------------------------------------------------------------
 
     @Override
@@ -55,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .realmName("rest-auth")
                 .and()
                     .csrf()
-                        .disable()
+                        .disable() //needed, otherwise spring expects a csrf token and returns 403
         ;
     }
 
@@ -90,6 +94,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and().formLogin()
 //                .and().httpBasic();
 //    }
+
+
 
     //other stuff ------------------------------------------------------------------------------------------------------
 
