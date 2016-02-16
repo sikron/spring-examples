@@ -1,5 +1,3 @@
-tbd
-
 # password flow
 
 * get a token:
