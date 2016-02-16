@@ -24,6 +24,6 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
                 .and()
                 .authorizeRequests()
                 .antMatchers("/it").access("#oauth2.hasScope('read')");
-                //hasScope('blub') -> donald cannot access it as the aClient does not have the 'blub' scope
+                //".hasScope('blub')" -> donald cannot access it as the aClient does not have the 'blub' scope
     }
 }

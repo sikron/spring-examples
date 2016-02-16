@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ContextConfiguration(classes = {WebConfig.class, WebSecurityConfig.class,
         OAuth2AuthorizationServerConfig.class, OAuth2ResourceServerConfig.class})
-public class AuthenticationTest extends AbstractTestNGSpringContextTests {
+public class PasswordGrantTypeTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;

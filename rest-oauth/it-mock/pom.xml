@@ -16,6 +16,7 @@
             <groupId>com.skronawi.spring-examples</groupId>
             <artifactId>rest-oauth-service</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <classifier>classes</classifier>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

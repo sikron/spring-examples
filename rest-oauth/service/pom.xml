@@ -52,8 +52,8 @@
                 <version>2.4</version>
                 <configuration>
                     <warSourceDirectory>service/src/main/webapp</warSourceDirectory>
-                    <warName>spring-rest-oauth-example</warName>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <attachClasses>true</attachClasses>
                 </configuration>
             </plugin>
             <plugin>
