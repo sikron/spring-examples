@@ -2,9 +2,9 @@
 
 This project is about Spring REST Authentication. There exist these modules:
 
-* `rest-auth-service`: 
+* `rest-auth-service`:
 a complete REST service with Spring Java configs. there exist resources with different levels of authentication and authorization
-* `it-mock`: 
+* `it-mock`:
 integration tests of the REST service with MockMvc.
 
 # Purpose

@@ -2,21 +2,21 @@
 
 This project is about Spring REST. There exist these modules:
 
-* `businesslogic-api`: 
+* `businesslogic-api`:
 the interface of the business-logic. the business-logic is just CRUD here.
-* `businesslogic-impl`: 
+* `businesslogic-impl`:
 the implementation to the interface.
-* `communication`: 
+* `communication`:
 the REST specific stuff, endpoints, exception-mapper, etc.
-* `inmemory-persistence`: 
+* `inmemory-persistence`:
 implementation of the persistence interface of the `jpa` project, just to provide CRUD. is in-memory, so no database needed here.
-* `service`: 
+* `service`:
 the module, which ties all the upper modules together via Spring Bean Injection, resulting in a webapp.
-* `it-core`: 
+* `it-core`:
 commonly used stuff by the integration tests.
-* `it-mvcmock`: 
+* `it-mvcmock`:
 integration tests of the REST service with MockMvc.
-* `it-boot`: 
+* `it-boot`:
 integration tests of the REST service with Spring Boot. Here a complete inmemory webapp is setup for the tests to go against.
 
 # Purpose
