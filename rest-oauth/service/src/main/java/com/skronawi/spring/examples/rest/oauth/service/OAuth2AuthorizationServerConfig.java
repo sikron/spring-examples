@@ -65,7 +65,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
                         ,"authorization_code"
 
-//                        ,"client_credentials"
+                        ,"client_credentials"
                 )
                 .scopes("read", "write")
                 .resourceIds("rest-oauth_resources")

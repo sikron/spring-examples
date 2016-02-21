@@ -29,7 +29,7 @@ basic-authenticated with donald/d8ck
 in a form the authorization can be granted, then the form-POST is forwarded to
 http://localhost:8080/#access_token=143961e8-aac8-44e6-82a6-9a9abe5ff217&token_type=bearer&expires_in=43199&scope=read
 
-hard to implement integration test, as user interaction is required and i currently don't know how to get and answer the form
+hard to implement integration test, as user interaction is required and i currently don't know how to get and answer the form.
 
 resources:
 
@@ -50,8 +50,19 @@ curl -u aClient:client_secret -X POST http://localhost:8080/oauth/token -H "Acce
 response will be just like in the "password" flow:
 {"access_token":"747df752-e9d0-4eed-b7d5-ef6a66fc393c","token_type":"bearer","refresh_token":"f6518739-7f35-4c89-a20e-a346b382efa8","expires_in":43199,"scope":"read write"}
 
-hard to implement integration test, as user interaction is required and i currently don't know how to get and answer the form
+hard to implement integration test, as user interaction is required and i currently don't know how to get and answer the form.
 
 resources:
 
 * http://www.ibm.com/developerworks/library/se-oauthjavapt3/
+
+# client credentials flow
+
+* get a token just with client credentials
+curl -u aClient:client_secret -d "grant_type=client_credentials" http://localhost:8080/oauth/token
+
+* response will be a JSON like above 
+
+resources:
+
+* http://stackoverflow.com/questions/14140020/understanding-oauth2-client-credentials-flow

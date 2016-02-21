@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="sockjs-1.0.3.min.js"></script>
+    <script>
+
+        var url = 'http://' + window.location.host + '/echo';
+        var sock = new SockJS(url);
+        var counter = 0;
+
+        sock.onopen = function () {
+            console.log('Opening');
+            sayMarco();
+        };
+
+        sock.onmessage = function (e) {
+            console.log('Received message: ', e.data);
+            setTimeout(function () {
+                sayMarco()
+            }, 2000);
+        };
+
+        sock.onclose = function () {
+            console.log('Closing');
+        };
+
+        function sayMarco() {
+            console.log('Sending Marco!');
+            sock.send("Marco! " + counter++);
+        }
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
