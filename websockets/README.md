@@ -9,9 +9,9 @@ Basically the same as 'lowlevel', but as socket implementation SockJS is used.
 'lowlevel' and 'sockjs' were adapted from https://github.com/habuma/SpringInActionExamples/tree/master/Chapter_18
 Many thx for that! :-)
 * broker
-Basically the same as 'sockjs', but for sending messages out, a in-memory broker is used. The Web layer provides a
-websocket endpoint, which accepts messages and sends them to a queue on a certain topic. Listeners on this queue-topic 
-then get the message.
+Basically the same as 'sockjs', but for sending messages out, a in-memory broker is used. Also the STOMP protocol is used
+here. The Web layer provides a websocket endpoint, which accepts messages and sends them to a queue on a certain topic. 
+Listeners on this queue-topic then get the message.
 The 'broker' project was copied from https://github.com/lynas/Spring4withWebsocket in order to have a working setup for integration testing and adapted a little bit.
 Many thx for that! :-)
 
