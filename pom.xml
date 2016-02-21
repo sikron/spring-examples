@@ -24,6 +24,7 @@
         <module>microservices</module>
         <module>rest-auth</module>
         <module>rest-oauth</module>
+        <module>jsp</module>
     </modules>
 
 </project>
