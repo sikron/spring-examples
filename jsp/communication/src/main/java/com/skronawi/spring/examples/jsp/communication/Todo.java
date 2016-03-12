@@ -1,13 +1,19 @@
 package com.skronawi.spring.examples.jsp.communication;
 
+import java.util.Date;
+
 public class Todo {
 
     private String id;
-    private String name;
+    private String issue;
     private boolean done;
+    private Date creationDate;
 
-    public Todo(String name) {
-        this.name = name;
+    public Todo() {
+    }
+
+    public Todo(String issue) {
+        this.issue = issue;
     }
 
     public String getId() {
@@ -18,12 +24,12 @@ public class Todo {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getIssue() {
+        return issue;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIssue(String issue) {
+        this.issue = issue;
     }
 
     public boolean isDone() {
@@ -32,5 +38,13 @@ public class Todo {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

@@ -17,12 +17,18 @@ public class TodosControllerMockMvcStandaloneTest {
 
     private MockMvc mockMvc;
     private TodosRepo mockedTodosRepo;
+    private ViewState mockedViewState;
 
     @BeforeClass
     public void setup() {
         mockedTodosRepo = getMockedTodosRepo();
-        TodosController controller = new TodosController(mockedTodosRepo);
+        mockedViewState = getMockedViewState();
+        TodosController controller = new TodosController(mockedTodosRepo, mockedViewState);
         mockMvc = standaloneSetup(controller).build();
+    }
+
+    private ViewState getMockedViewState() {
+        return new ViewState();
     }
 
     private TodosRepo getMockedTodosRepo() {
@@ -55,7 +61,7 @@ public class TodosControllerMockMvcStandaloneTest {
             for (Todo expected : this.expectedTodos) {
                 boolean matched = false;
                 for (Todo actualTodo : actualTodos) {
-                    if (actualTodo.getName().equals(expected.getName())
+                    if (actualTodo.getIssue().equals(expected.getIssue())
                             && actualTodo.getId().equals(expected.getId())
                             && actualTodo.isDone() == expected.isDone()) {
                         matched = true;

@@ -12,4 +12,9 @@ public class RootConfig {
     public TodosRepo todosRepo() {
         return new TodosRepo();
     }
+
+    @Bean
+    public ViewState viewState() {
+        return new ViewState();
+    }
 }

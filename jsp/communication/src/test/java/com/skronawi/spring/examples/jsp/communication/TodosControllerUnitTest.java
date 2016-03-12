@@ -8,7 +8,7 @@ public class TodosControllerUnitTest {
 
     @Test
     public void testHomePage() throws Exception {
-        TodosController controller = new TodosController(new TodosRepo());
-        Assert.assertEquals(controller.todos(new ExtendedModelMap()), "todos");
+        TodosController controller = new TodosController(new TodosRepo(), new ViewState());
+        Assert.assertEquals(controller.getTodos(new ExtendedModelMap()), "todos");
     }
 }

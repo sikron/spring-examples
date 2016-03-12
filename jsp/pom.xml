@@ -15,7 +15,6 @@
 
     <modules>
         <module>communication</module>
-        <module>service-dynamic</module>
         <module>it-mvcmock</module>
     </modules>
 

@@ -1,4 +1,4 @@
-package com.skronawi.spring.examples.jsp.service.dynamic;
+package com.skronawi.spring.examples.jsp.communication;
 
 import com.skronawi.spring.examples.jsp.communication.RootConfig;
 import com.skronawi.spring.examples.jsp.communication.WebConfig;
