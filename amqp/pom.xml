@@ -17,6 +17,7 @@
     <modules>
         <module>simple</module>
         <module>javaconfig</module>
+        <module>deadletter</module>
     </modules>
 
     <dependencies>
