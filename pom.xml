@@ -27,6 +27,7 @@
         <module>jsp</module>
         <module>jersey</module>
         <module>soap</module>
+        <module>amqp</module>
     </modules>
 
 </project>

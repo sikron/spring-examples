@@ -1,6 +1,7 @@
 package com.skronawi.spring.examples.rest.service;
 
 import com.skronawi.spring.examples.rest.communication.Error;
+import com.skronawi.spring.examples.rest.communication.MyPageable;
 import com.skronawi.spring.examples.rest.communication.RestData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -66,6 +67,18 @@ public class RestMvcMockIntegrationTest extends AbstractRestTest {
     @Override
     protected Set<RestData> getAllAndAssertResponse() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/data"));
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        MockHttpServletResponse response = resultActions.andReturn().getResponse();
+        return objectMapper.readValue(response.getContentAsString(), restDataSetType);
+    }
+
+    @Override
+    protected Set<RestData> getAllAndAssertResponse(MyPageable myPageable) throws Exception {
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/data")
+                .param("offset", String.valueOf(myPageable.getOffset()))
+                .param("limit", String.valueOf(myPageable.getLimit())));
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));

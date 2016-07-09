@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -22,9 +25,16 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Set<RestData> getAll() {
+    public Set<RestData> getAll(MyPageable myPageable) {
         Set<RestData> restDatas = DataMapper.toRest(dataBusinessLogic.getAll());
-        return restDatas;
+        return subList(restDatas, myPageable);
+    }
+
+    private Set<RestData> subList(Set<RestData> restDatas, MyPageable myPageable) {
+        int fromIncl = restDatas.isEmpty() ? 0 : Math.min(restDatas.size(), myPageable.getOffset());
+        int toExcl = Math.min(restDatas.size(), myPageable.getOffset() + myPageable.getLimit());
+        List<RestData> asList = Arrays.asList(restDatas.toArray(new RestData[]{}));
+        return new HashSet<RestData>(asList.subList(fromIncl, toExcl));
     }
 
     @RequestMapping(value = "{id}",
@@ -33,7 +43,7 @@ public class DataController {
     @ResponseBody
     public RestData get(@PathVariable("id") String id) {
         Data data = dataBusinessLogic.get(id);
-        if (data == null){
+        if (data == null) {
             throw new DataNotFoundException(id);
         }
         return DataMapper.toRest(data);

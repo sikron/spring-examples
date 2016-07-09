@@ -1,0 +1,25 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+        http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <rabbit:connection-factory id="connectionFactory"
+                               host="localhost"
+                               virtual-host="/"
+                               username="guest"
+                               password="guest"/>
+
+    <rabbit:admin connection-factory="connectionFactory"/>
+
+    <rabbit:queue id="message_queue_id" name="message_queue"/>
+
+    <rabbit:direct-exchange name="message_exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="message_queue"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+</beans>

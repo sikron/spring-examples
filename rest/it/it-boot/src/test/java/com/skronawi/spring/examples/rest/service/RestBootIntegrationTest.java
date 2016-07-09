@@ -1,6 +1,7 @@
 package com.skronawi.spring.examples.rest.service;
 
 import com.skronawi.spring.examples.rest.communication.Error;
+import com.skronawi.spring.examples.rest.communication.MyPageable;
 import com.skronawi.spring.examples.rest.communication.RestData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -64,6 +65,17 @@ public class RestBootIntegrationTest extends AbstractRestTest {
     @Override
     protected Set<RestData> getAllAndAssertResponse() {
         ResponseEntity<Set<RestData>> response = restTemplate.exchange("http://localhost:" + port + "/data",
+                HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Set<RestData>>() {
+                });
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertTrue(response.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
+        return response.getBody();
+    }
+
+    @Override
+    protected Set<RestData> getAllAndAssertResponse(MyPageable myPageable) {
+        ResponseEntity<Set<RestData>> response = restTemplate.exchange("http://localhost:" + port + "/data?offset="
+                + myPageable.getOffset() + "&limit=" + myPageable.getLimit(),
                 HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Set<RestData>>() {
                 });
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
