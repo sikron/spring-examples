@@ -18,6 +18,7 @@
         <module>simple</module>
         <module>javaconfig</module>
         <module>deadletter</module>
+        <module>mqc</module>
     </modules>
 
     <dependencies>

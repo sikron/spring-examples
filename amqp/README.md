@@ -7,6 +7,7 @@ is a protocol for exchanging messages. It is supported e.g. in RabbitMQ
 
 * Getting to know AMQP
 * Understanding the difference of talking to RabbitMQ directly and talking to the generic AMQP provider
+* Getting to know, how different queues can be managed
 
 # Requirements
 
@@ -23,3 +24,7 @@ is a protocol for exchanging messages. It is supported e.g. in RabbitMQ
   * see the consumer getting the messages
   * also first the Producer can be started, the Consumer later then fetches all accumulated messages
   * also several Consumers can be started, the messages then get distributed via Round-Robin
+* `javaconfig` is the same as `simple`, only with a java configuration instead of xml
+* `deadletter` is an example, how to configure a dead-letter queue for a working queue, e.g. in case of time-to-live timeout
+* `multi-queue-client` is a client for using 3 different queues, one working queue, one retry-queue in case of
+client-processing-failure and one dead-letter queue for final gathering of undeliverable messages
