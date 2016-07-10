@@ -20,17 +20,26 @@ public class ConsumerMessageListener implements MessageListener {
     }
 
     public void onMessage(Message message) {
+
         MessageWithInfos messageWithInfos = null;
+
         try {
             messageWithInfos = objectMapper.readValue(message.getBody(), MessageWithInfos.class);
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(e); //TODO put into dead-letter queue here, as the message is really poisoned
         }
+
         try {
             consumerCallback.handle(messageWithInfos);
         } catch (Exception e) {
-            //TODO re-queue
-            System.out.println(e); // -> so no exception -> so not in deadletter queue
+
+//            System.out.println(e); // -> so no exception -> so not in deadletter queue
+
+            if (messageWithInfos.getTryCount() < 3) {
+                producer.retry(messageWithInfos);
+            } else {
+                producer.deadletter(messageWithInfos);
+            }
         }
     }
 

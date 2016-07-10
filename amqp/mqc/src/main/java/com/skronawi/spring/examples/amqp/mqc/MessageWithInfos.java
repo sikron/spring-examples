@@ -4,7 +4,7 @@ public class MessageWithInfos {
 
     private String id;
     private String payload;
-    private int retryCount;
+    private int tryCount;
 
     public String getId() {
         return id;
@@ -22,11 +22,11 @@ public class MessageWithInfos {
         this.payload = payload;
     }
 
-    public int getRetryCount() {
-        return retryCount;
+    public int getTryCount() {
+        return tryCount;
     }
 
-    public void setRetryCount(int retryCount) {
-        this.retryCount = retryCount;
+    public void setTryCount(int tryCount) {
+        this.tryCount = tryCount;
     }
 }

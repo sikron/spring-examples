@@ -8,27 +8,25 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
-@PropertySource("classpath:mqc.properties")
+//@PropertySource("classpath:mqc.properties")
 @ComponentScan("com.skronawi.spring.examples.amqp.mqc")
+@Import(ConnectionConfig.class)
 public class Config {
 
-    @Value("${connection.host}")
-    private String host;
-    @Value("${connection.port}")
-    private int port;
-    @Value("${connection.username}")
-    private String username;
-    @Value("${connection.password}")
-    private String password;
-    @Value("${connection.vhost}")
-    private String vhost;
+//    @Value("${connection.host}")
+//    private String host;
+//    @Value("${connection.port}")
+//    private int port;
+//    @Value("${connection.username}")
+//    private String username;
+//    @Value("${connection.password}")
+//    private String password;
+//    @Value("${connection.vhost}")
+//    private String vhost;
 
     @Value("${queue.working.name}")
     private String workingQueueName;
@@ -43,27 +41,27 @@ public class Config {
     @Value("${queue.retry.ttlsecs}")
     private int retryQueueTtlSecs;
 
-    @Bean
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
-        cachingConnectionFactory.setHost(host);
-        cachingConnectionFactory.setPort(port);
-        cachingConnectionFactory.setVirtualHost(vhost);
-        cachingConnectionFactory.setUsername(username);
-        cachingConnectionFactory.setPassword(password);
-        return cachingConnectionFactory;
-    }
-
-    @Bean
-    public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
-        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
-        return rabbitAdmin;
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
+//    @Bean
+//    public ConnectionFactory connectionFactory() {
+//        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+//        cachingConnectionFactory.setHost(host);
+//        cachingConnectionFactory.setPort(port);
+//        cachingConnectionFactory.setVirtualHost(vhost);
+//        cachingConnectionFactory.setUsername(username);
+//        cachingConnectionFactory.setPassword(password);
+//        return cachingConnectionFactory;
+//    }
+//
+//    @Bean
+//    public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
+//        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+//        return rabbitAdmin;
+//    }
+//
+//    @Bean
+//    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+//        return new PropertySourcesPlaceholderConfigurer();
+//    }
 
     @Bean(name = "workingTemplate")
     public AmqpTemplate workingTemplate(ConnectionFactory connectionFactory) {
@@ -77,6 +75,7 @@ public class Config {
     public AmqpTemplate retryTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setRoutingKey(retryQueueName + "_queue");
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         return rabbitTemplate;
     }
 
@@ -84,6 +83,7 @@ public class Config {
     public AmqpTemplate deadletterTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setRoutingKey(deadletterQueueName + "_queue");
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         return rabbitTemplate;
     }
 
@@ -136,7 +136,7 @@ public class Config {
         return QueueBuilder.durable(retryQueueName + "_queue")
                 .withArgument("x-dead-letter-exchange", workingQueueName + "_exchange")
                 .withArgument("x-dead-letter-routing-key", workingQueueName + "_queue")
-                .withArgument("x-message-ttl", retryQueueTtlSecs * 1000)
+//                .withArgument("x-message-ttl", retryQueueTtlSecs * 1000) // set the TTL per message in this queue, e.g. exp-backoff
                 .build();
     }
 

@@ -19,7 +19,7 @@ public class SimpleTest extends AbstractTestNGSpringContextTests {
     private Consumer consumer;
 
     @Test
-    public void testPos() throws Exception {
+    public void testSimplePositive() throws Exception {
 
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -29,7 +29,7 @@ public class SimpleTest extends AbstractTestNGSpringContextTests {
             public void handle(MessageWithInfos messageWithInfos) {
                 Assert.assertEquals(messageWithInfos.getId(), id);
                 Assert.assertEquals(messageWithInfos.getPayload(), "a");
-                Assert.assertEquals(messageWithInfos.getRetryCount(), 0);
+                Assert.assertEquals(messageWithInfos.getTryCount(), 0);
                 countDownLatch.countDown();
             }
         });
@@ -38,17 +38,9 @@ public class SimpleTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void testNeg() throws Exception {
+    public void testTry3TimesThenDeadLetter() throws Exception {
 
-        /*
-        deadletter_queue is configured as "deadletter" queue for working_queue, so the failed message is put there
-        when the consumer fails.
-        BUT actually the deadletter queue should only be used for TTL exceeded messages from the working queue.
-
-        So the consumer must actively put the failed message into the retry-queue instead!
-         */
-
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final CountDownLatch countDownLatch = new CountDownLatch(4);
 
         final String id = producer.send("a");
 
