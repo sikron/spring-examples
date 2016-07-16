@@ -1,15 +1,12 @@
 package com.skronawi.spring.examples.amqp.mqc;
 
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 //@PropertySource("classpath:mqc.properties")
@@ -151,7 +148,9 @@ public class Config {
     }
 
     @Bean
-    public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, ConsumerMessageListener consumerMessageListener) {
+    public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
+            RetryAndDeadletterAwareMessageListener retryAndDeadletterAwareMessageListener) {
+
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(workingQueueName + "_queue");
@@ -162,13 +161,13 @@ public class Config {
         // TODO can't this be configured? on error -> retry-queue
 
         container.setMessageConverter(new Jackson2JsonMessageConverter());
-        container.setMessageListener(consumerMessageListener);
+        container.setMessageListener(retryAndDeadletterAwareMessageListener);
 
         return container;
     }
 
     @Bean
-    public ConsumerMessageListener consumerMessageListener() {
-        return new ConsumerMessageListener();
+    public RetryAndDeadletterAwareMessageListener retryAndDeadletterAwareMessageListener() {
+        return new RetryAndDeadletterAwareMessageListener();
     }
 }

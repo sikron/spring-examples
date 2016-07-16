@@ -12,7 +12,8 @@ public class Consumer {
 
     public void listen(ConsumerCallback consumerCallback) {
 
-        ConsumerMessageListener messageListener = (ConsumerMessageListener) simpleMessageListenerContainer.getMessageListener();
+        RetryAndDeadletterAwareMessageListener messageListener =
+                (RetryAndDeadletterAwareMessageListener) simpleMessageListenerContainer.getMessageListener();
         messageListener.setCallback(consumerCallback);
 
         //TODO simpleMessageListenerContainer starts listening immediatly. what happens to messages, as long as no callback is set?

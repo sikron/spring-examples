@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-public class ConsumerMessageListener implements MessageListener {
+public class RetryAndDeadletterAwareMessageListener implements MessageListener {
 
     @Autowired
     private Producer producer;
@@ -15,7 +15,7 @@ public class ConsumerMessageListener implements MessageListener {
     private ConsumerCallback consumerCallback;
     private final ObjectMapper objectMapper;
 
-    public ConsumerMessageListener() {
+    public RetryAndDeadletterAwareMessageListener() {
         objectMapper = new ObjectMapper();
     }
 
