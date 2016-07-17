@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
@@ -23,9 +22,16 @@ public class CustomValidConfig {
 
     @Bean
     public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource =
+        ReloadableResourceBundleMessageSource messageSource =
                 new ReloadableResourceBundleMessageSource();
-        reloadableResourceBundleMessageSource.setBasename("validationMessages");
-        return reloadableResourceBundleMessageSource;
+
+//        messageSource.setBasename("classpath:validationMessages");
+        messageSource.setBasename("validationMessages");
+
+//        messageSource.setFallbackToSystemLocale(true);
+        messageSource.setDefaultEncoding("UTF-8");
+//        messageSource.setCacheSeconds(3600);
+
+        return messageSource;
     }
 }

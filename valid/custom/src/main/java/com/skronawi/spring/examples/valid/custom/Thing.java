@@ -28,8 +28,8 @@ public class Thing {
     @Future(message = "The value \"${formatter.format('%1$tY-%1$tm-%1$td', validatedValue)}\" is not in future!")
     private Date dueDate;
 
+    @NotNull
     private List<String> tags;
-
 
     public String getId() {
         return id;

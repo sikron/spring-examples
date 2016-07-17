@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Date;
 
 @ContextConfiguration(classes = CustomValidConfig.class)
@@ -34,6 +35,7 @@ public class ValidThingsTest extends AbstractTestNGSpringContextTests {
         thing.setName("simon");
         thing.setAmount(6);
         thing.setDueDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+        thing.setTags(Collections.singletonList("super"));
         thingManager.create(thing);
     }
 }

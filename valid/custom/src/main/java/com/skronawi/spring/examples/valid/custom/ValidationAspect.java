@@ -18,13 +18,14 @@ public class ValidationAspect {
     @Autowired
     private LocalValidatorFactoryBean validator;
 
-//    @Before("@annotation(com.skronawi.spring.examples.valid.custom.MyValid)") //@annotation is for ElementType.METHOD, not PARAMETER
+    //    @Before("@annotation(com.skronawi.spring.examples.valid.custom.MyValid)") //@annotation is for ElementType.METHOD, not PARAMETER
     @Before("execution(* *(@MyValid (*)))")
     public void validateByAnnotation(JoinPoint joinPoint) {
 
         Object[] args = joinPoint.getArgs();
         Object arg = args[0];
 
+        //FIXME does not use the messages from the bundle, only the explicit specified ones (in code) or default ones
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(arg);
         if (!constraintViolations.isEmpty()) {
             throw new ConstraintViolationException(constraintViolations);
