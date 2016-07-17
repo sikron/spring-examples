@@ -18,7 +18,9 @@ public class ValidThingsTest extends AbstractTestNGSpringContextTests {
 
     @Test(expectedExceptions = ConstraintViolationException.class)
     public void createInvalidThing() throws Exception {
-        thingManager.create(new Thing());
+        Thing thing = new Thing();
+        thing.setDueDate(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+        thingManager.create(thing);
     }
 
     @Test

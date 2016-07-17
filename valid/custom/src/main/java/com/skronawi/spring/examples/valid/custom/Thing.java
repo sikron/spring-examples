@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -13,15 +14,18 @@ public class Thing {
     private String id;
 
     //hibernate validators, not the javax stuff
-    @NotBlank
-    @NotEmpty
+    @NotBlank //use default message
+    @NotEmpty(message = "{NotEmpty.thing.name}") //use message from validationMessages.properties //FIXME shouldn't this work automatically without specifying the key here?
     private String name;
 
     //from javax
-    @Min(value = 5, message = "a value of 5 is minimum, '${validatedValue}' is to small")
+    //use explicit message here; try interpolated values
+    @Min(value = 5, message = "a value of {min} is minimum, '${validatedValue}' is to small")
     private int amount;
 
-    @Future
+    @NotNull
+    //use explicit message here; try more complex interpolated values, e.g. with formatting
+    @Future(message = "The value \"${formatter.format('%1$tY-%1$tm-%1$td', validatedValue)}\" is not in future!")
     private Date dueDate;
 
     private List<String> tags;
