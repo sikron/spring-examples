@@ -15,7 +15,7 @@ public class Thing {
 
     //hibernate validators, not the javax stuff
     @NotBlank //use default message
-    @NotEmpty(message = "{NotEmpty.thing.name}") //use message from validationMessages.properties //FIXME shouldn't this work automatically without specifying the key here?
+    @NotEmpty(message = "{NotEmpty.thing.name}") //use message from my-messages.properties //FIXME shouldn't this work automatically without specifying the key here?
     private String name;
 
     //from javax

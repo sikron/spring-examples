@@ -39,7 +39,8 @@ public class ValidThingsTest extends AbstractTestNGSpringContextTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
         MockHttpServletResponse response = resultActions.andReturn().getResponse();
-        return objectMapper.readValue(response.getContentAsString(), Thing.class);
+        String contentAsString = response.getContentAsString();
+        return objectMapper.readValue(contentAsString, Thing.class);
     }
 
     @Test

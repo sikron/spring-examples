@@ -9,6 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <artifactId>valid-custom</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -77,6 +79,5 @@
         </dependency>
     </dependencies>
 
-    <artifactId>valid-custom</artifactId>
 
 </project>

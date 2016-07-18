@@ -1,10 +1,15 @@
 package com.skronawi.spring.examples.valid.simple;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequestMapping(path = "/")
 @RestController
@@ -12,6 +17,9 @@ public class ThingController {
 
     @Autowired
     private ThingManager thingManager;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -32,5 +40,15 @@ public class ThingController {
     @ResponseBody
     public Thing get(String id) {
         return thingManager.get(id);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMANVE(MethodArgumentNotValidException manve) {
+        String response = "";
+        List<FieldError> fieldErrors = manve.getBindingResult().getFieldErrors();
+        for (FieldError fe : fieldErrors) {
+            response += messageSource.getMessage(fe, null) + "\n";
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

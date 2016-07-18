@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Thing {
     @Min(value = 5, message = "a value of 5 is minimum, '${validatedValue}' is to small")
     private int amount;
 
+    @NotNull
     @Future
     private Date dueDate;
 
