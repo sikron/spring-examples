@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Before;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
@@ -48,9 +49,19 @@ public class ValidationAspect {
         if (!bindingResult.getFieldErrors().isEmpty()) {
             Map<String,List<String>> violationsPerField = new HashMap<>();
             for (FieldError fe : bindingResult.getFieldErrors()){
+
                 violationsPerField.putIfAbsent(fe.getField(), new ArrayList<>());
                 List<String> fieldViolations = violationsPerField.get(fe.getField());
-                fieldViolations.add(messageSource.getMessage(fe, null)); //FIXME so the messages directly on the annotations are not used
+
+                //if key for "fe" is existing in the my-messages, this value is used, otherwise the annotations default value is used
+                //without specific locale the system's locale is used, which is "en" on my system. but there is no "en" properties, so the default one is used
+                String message = messageSource.getMessage(fe, null);
+                //e.g. for @NotEmpty the default message is "may not be empty", which does not state the field, so adapt it
+                if (message.equals(fe.getDefaultMessage())){
+                    message = fe.getField() + ": " + message;
+                }
+
+                fieldViolations.add(message); //FIXME the messages directly on the annotations are not used
             }
             throw new MyConstraintViolationException(violationsPerField);
         }
