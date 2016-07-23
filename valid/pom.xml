@@ -16,5 +16,6 @@
     <modules>
         <module>simple</module>
         <module>custom</module>
+        <module>validated</module>
     </modules>
 </project>
