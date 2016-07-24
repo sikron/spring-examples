@@ -33,7 +33,7 @@ public class ValidatedConfig {
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        //different from "validationMessages" and "messages" on purpose to see, whether this custom stuff really works
+        //different from "validationMessages" and "messages" on purpose to see, whether this aspect stuff really works
         messageSource.setBasename("my-messages");
         return messageSource;
     }
