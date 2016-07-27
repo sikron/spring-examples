@@ -12,7 +12,7 @@
     <artifactId>security-parent</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>simple</module>
+        <module>overrides</module>
     </modules>
 
 
