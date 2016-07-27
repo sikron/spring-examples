@@ -16,7 +16,7 @@ public class TestConfig {
         //return new MyPreAuthorizedService();
         //return new MySecuredPreAuthorizedService(); //also here, although annotations are different !?!?!
 
-        //this behaves weird !!
+        //this behaves weird !! see https://github.com/spring-projects/spring-security/issues/2116
         return new MyPreAuthorizedSecuredService();
     }
 }
