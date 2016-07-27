@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>simple</module>
+        <module>mvc</module>
         <module>aspect</module>
         <module>validated</module>
     </modules>
