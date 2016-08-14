@@ -23,6 +23,10 @@ public class ItemManager {
 
     unfortunately the caching of the getAll() is only set-wide and is not fine-granular with respect to the actually
     modified item.
+
+    see
+    - http://stackoverflow.com/questions/24940976/how-update-remove-an-item-already-cached-within-a-collection-of-items
+    - https://jira.spring.io/browse/SPR-12036
     */
 
     public static final String ITEM_CACHE_NAME = "item";
