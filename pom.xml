@@ -31,6 +31,7 @@
         <module>amqp</module>
         <module>valid</module>
         <module>security</module>
+        <module>caching</module>
     </modules>
 
     <build>
