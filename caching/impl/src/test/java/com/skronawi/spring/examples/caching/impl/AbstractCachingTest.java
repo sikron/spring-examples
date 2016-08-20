@@ -1,7 +1,6 @@
 package com.skronawi.spring.examples.caching.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -9,8 +8,7 @@ import org.testng.annotations.Test;
 
 import java.util.Set;
 
-@ContextConfiguration(classes = CachingConfig.class)
-public class ItemManagerCachingTest extends AbstractTestNGSpringContextTests {
+public abstract class AbstractCachingTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private ItemManager itemManager;
@@ -19,12 +17,12 @@ public class ItemManagerCachingTest extends AbstractTestNGSpringContextTests {
     private AccessCountingItemStore accessCountingResettableItemStore;
 
     @BeforeMethod
-    public void reset(){
+    public void reset() {
         accessCountingResettableItemStore.reset();
     }
 
     @Test
-    public void createGet(){
+    public void createGet() {
 
         Item item = new Item(null, "the-value");
         Item createdItem = itemManager.create(item);
@@ -37,7 +35,7 @@ public class ItemManagerCachingTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createUpdate(){
+    public void createUpdate() {
 
         Item item = new Item(null, "the-value");
         Item createdItem = itemManager.create(item);
@@ -49,7 +47,7 @@ public class ItemManagerCachingTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void getDelete(){
+    public void getDelete() {
 
         itemManager.create(new Item(null, "1"));
         Item item = itemManager.getById("1");
@@ -66,7 +64,7 @@ public class ItemManagerCachingTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void multipleGetAllsWithCreateInBetween(){
+    public void multipleGetAllsWithCreateInBetween() {
 
         //create 2
         itemManager.create(new Item(null, "1"));
@@ -93,7 +91,7 @@ public class ItemManagerCachingTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void multipleGetAllsWithUpdateInBetween(){
+    public void multipleGetAllsWithUpdateInBetween() {
 
         Item item = itemManager.create(new Item(null, "1"));
         itemManager.getById();
@@ -114,7 +112,7 @@ public class ItemManagerCachingTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void multipleGetAllsWithDeleteInBetween(){
+    public void multipleGetAllsWithDeleteInBetween() {
 
         Item item = itemManager.create(new Item(null, "1"));
         itemManager.getById();
