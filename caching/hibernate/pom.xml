@@ -37,7 +37,11 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.0.7.Final</version>
+            <version>5.1.0.Final</version>
+            <!--
+            needed because of api incompatibility in newest version 5.2.2.Final
+            see http://stackoverflow.com/questions/38417613/migration-to-hibernate-core-5-2-1-ava-lang-nosuchmethoderror-org-hibernate-sess
+            -->
         </dependency>
 
         <dependency>
@@ -50,6 +54,20 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>5.1.0.Final</version>
+            <!--same version as hibernate-entitymanager-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+            <version>2.6.11</version>
             <scope>test</scope>
         </dependency>
 

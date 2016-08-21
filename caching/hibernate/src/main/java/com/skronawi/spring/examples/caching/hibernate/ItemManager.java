@@ -30,6 +30,10 @@ public class ItemManager {
         return itemRepository.findAll();
     }
 
+    public void delete(String id){
+        itemRepository.delete(id);
+    }
+
     public Item getNTimes(String id, int times) {
         Item item = null;
         for (int i = 0; i < times; i++) {
@@ -45,5 +49,14 @@ public class ItemManager {
             item = itemRepository.findOne(id);
         }
         return item;
+    }
+
+    public Item update(Item item) {
+        Item one = itemRepository.findOne(item.getId());
+        if (one == null){
+            throw new IllegalArgumentException("not found by id " + item.getId());
+        }
+        one.setValue(item.getValue());
+        return itemRepository.save(one);
     }
 }

@@ -23,7 +23,7 @@ import java.util.Properties;
 @PropertySource("classpath:database.properties")
 @EnableJpaRepositories
 @EnableTransactionManagement //necessary for the @Transactional !
-public class HibernateCachingTestDatebaseConfig {
+public class HibernateTestDatebaseConfig {
 
     @Value("${db.driverClassName}")
     private String dbDriverClassName;

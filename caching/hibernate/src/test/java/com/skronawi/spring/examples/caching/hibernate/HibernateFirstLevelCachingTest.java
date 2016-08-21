@@ -8,8 +8,8 @@ import org.testng.annotations.Test;
 
 import java.util.stream.IntStream;
 
-@ContextConfiguration(classes = {HibernateCachingTestDatebaseConfig.class})
-public class HibernateCachingTest extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(classes = {HibernateTestDatebaseConfig.class})
+public class HibernateFirstLevelCachingTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private ItemManager itemManager;
