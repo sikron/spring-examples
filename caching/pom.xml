@@ -14,7 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>impl</module>
+        <module>impls</module>
+        <module>hibernate</module>
     </modules>
 
 </project>
