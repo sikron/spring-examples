@@ -10,11 +10,13 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "Item")
+@Table(name = "item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Item {
 

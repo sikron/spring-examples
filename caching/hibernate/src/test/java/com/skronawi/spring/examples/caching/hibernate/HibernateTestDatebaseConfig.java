@@ -1,10 +1,9 @@
 package com.skronawi.spring.examples.caching.hibernate;
 
+import com.skronawi.spring.examples.caching.hibernate.firstlevel.DefaultCacheConfig;
+import com.skronawi.spring.examples.caching.hibernate.secondlevel.SecondLevelCacheConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -18,11 +17,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+@EnableTransactionManagement //necessary for the @Transactional !
 @Configuration
-@ComponentScan
 @PropertySource("classpath:database.properties")
 @EnableJpaRepositories
-@EnableTransactionManagement //necessary for the @Transactional !
+//exclude the configs by default, add them to the context in the test-classes as needed. otherwise they would interfere with each other
+@ComponentScan(excludeFilters =
+    @ComponentScan.Filter(
+            type = FilterType.ASSIGNABLE_TYPE,
+            classes = {DefaultCacheConfig.class, SecondLevelCacheConfig.class}))
 public class HibernateTestDatebaseConfig {
 
     @Value("${db.driverClassName}")
@@ -53,7 +56,7 @@ public class HibernateTestDatebaseConfig {
     }
 
     @Bean
-    public EntityManagerFactory entityManagerFactory() {
+    public EntityManagerFactory entityManagerFactory(Properties jpaProperties) {
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
@@ -68,6 +71,9 @@ public class HibernateTestDatebaseConfig {
         properties.setProperty("hibernate.show_sql", dbShowSql);
         properties.setProperty("hibernate.dialect", dbDialect);
 
+        jpaProperties.entrySet()
+                .forEach(entry -> properties.setProperty((String) entry.getKey(), (String) entry.getValue()));
+
         factory.setJpaProperties(properties);
 
         factory.afterPropertiesSet();
@@ -76,10 +82,10 @@ public class HibernateTestDatebaseConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 
         JpaTransactionManager txManager = new JpaTransactionManager();
-        txManager.setEntityManagerFactory(entityManagerFactory());
+        txManager.setEntityManagerFactory(entityManagerFactory);
         return txManager;
     }
 

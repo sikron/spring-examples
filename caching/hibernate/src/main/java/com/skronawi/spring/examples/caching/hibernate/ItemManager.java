@@ -59,4 +59,66 @@ public class ItemManager {
         one.setValue(item.getValue());
         return itemRepository.save(one);
     }
+
+    public Item queryByIdNTimes(String id, int times){
+        Item item = null;
+        for (int i = 0; i < times; i++) {
+            item = itemRepository.queryById(id);
+        }
+        return item;
+    }
+
+    @Transactional
+    public Item queryByIdNTimesInTransaction(String id, int times){
+        Item item = null;
+        for (int i = 0; i < times; i++) {
+            item = itemRepository.queryById(id);
+        }
+        return item;
+    }
+
+    public Item queryByValueNTimes(String value, int times){
+        Item item = null;
+        for (int i = 0; i < times; i++) {
+            item = itemRepository.queryByValue(value);
+        }
+        return item;
+    }
+
+    @Transactional
+    public Item queryByValueNTimesInTransaction(String value, int times){
+        Item item = null;
+        for (int i = 0; i < times; i++) {
+            item = itemRepository.queryByValue(value);
+        }
+        return item;
+    }
+
+    public Item updateNTimes(Item item, int times) {
+        for (int i = 0; i < times; i++) {
+            item = itemRepository.save(item);
+        }
+        return item;
+    }
+
+    @Transactional
+    public Item updateNTimesInTransaction(Item item, int times) {
+        for (int i = 0; i < times; i++) {
+            item = itemRepository.save(item);
+        }
+        return item;
+    }
+
+    public void deleteNTimes(String id, int times) {
+        for (int i = 0; i < times; i++) {
+            itemRepository.delete(id);
+        }
+    }
+
+    @Transactional
+    public void deleteNTimesInTransaction(String id, int times) {
+        for (int i = 0; i < times; i++) {
+            itemRepository.delete(id);
+        }
+    }
 }
