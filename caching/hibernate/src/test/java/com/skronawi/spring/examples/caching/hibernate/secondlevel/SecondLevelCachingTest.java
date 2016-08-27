@@ -1,12 +1,9 @@
 package com.skronawi.spring.examples.caching.hibernate.secondlevel;
 
-import com.skronawi.spring.examples.caching.hibernate.HibernateTestDatebaseConfig;
+import com.skronawi.spring.examples.caching.hibernate.TestDatabaseConfig;
 import com.skronawi.spring.examples.caching.hibernate.Item;
 import com.skronawi.spring.examples.caching.hibernate.ItemManager;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.engine.spi.PersistenceContext;
-import org.hibernate.stat.SessionStatistics;
 import org.hibernate.stat.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,13 +13,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.persistence.EntityManagerFactory;
+import java.util.concurrent.CountDownLatch;
 
 /*
 here no transactions are used. every itemManager-call uses a new entitymanager/session. but due to the used second-level
 cache, no unnecessary sql queries are executed.
  */
-@ContextConfiguration(classes = {HibernateTestDatebaseConfig.class, SecondLevelCacheConfig.class})
-public class HibernateSecondLevelCachingTest extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(classes = {TestDatabaseConfig.class, SecondLevelCacheConfig.class})
+public class SecondLevelCachingTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private ItemManager itemManager;
@@ -79,38 +77,46 @@ public class HibernateSecondLevelCachingTest extends AbstractTestNGSpringContext
     }
 
     @Test
-    public void queryByIdMultipleTimes() throws Exception {
+    public void twoInterferingQueries() throws Exception{
 
-        //repository query does not have a QueryHint, so multiple queries
-        itemManager.queryByIdNTimes(createdItem.getId(), 1);
-        itemManager.queryByIdNTimes(createdItem.getId(), 1);
-        itemManager.queryByIdNTimes(createdItem.getId(), 1);
-        itemManager.queryByIdNTimes(createdItem.getId(), 1);
-    }
+        CountDownLatch updateWaitLatch = new CountDownLatch(1);
+        CountDownLatch secondGetWaitLatch = new CountDownLatch(1);
+        CountDownLatch testWaitLatch = new CountDownLatch(1);
 
-    @Test
-    public void queryByValueMultipleTimes() throws Exception {
+        new Thread(
+                () -> {
+                    Item item = itemManager.get(createdItem.getId());
+                    System.out.println("got the item the first time");
+                    updateWaitLatch.countDown();
 
-        //repository query does have a QueryHint, so 1 query only
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
-    }
+                    try {
+                        secondGetWaitLatch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-    @Test
-    public void queryByValueCachedButUpdate() throws Exception {
+                    Item item2 = itemManager.get(createdItem.getId());
+                    System.out.println("got the item the second time");
 
-        //1 query only
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
+                    //itemManagers use shared 2L cache, so outer update is recognized here
+                    Assert.assertNotEquals(item2.getValue(), item.getValue());
 
-        createdItem.setValue("updated");
-        createdItem = itemManager.update(createdItem);
+                    testWaitLatch.countDown();
+                }).start();
 
-        //after update, a real query is performed
-        itemManager.queryByValueNTimes(createdItem.getValue(), 1);
+        new Thread(
+                () -> {
+                    try {
+                        updateWaitLatch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    createdItem.setValue("updated2");
+                    createdItem = itemManager.update(createdItem);
+                    System.out.println("updated the item");
+                    secondGetWaitLatch.countDown();
+                }).start();
+
+        testWaitLatch.await();
     }
 }

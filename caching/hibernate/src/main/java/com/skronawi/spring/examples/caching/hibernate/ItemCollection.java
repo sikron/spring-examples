@@ -1,25 +1,20 @@
 package com.skronawi.spring.examples.caching.hibernate;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.cache.annotation.Cacheable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "Item")
-@Table(name = "item")
+@Entity(name = "ItemCollection")
+@Table(name = "itemcollection")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Item {
+public class ItemCollection {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -27,4 +22,12 @@ public class Item {
     private String id;
 
     private String value;
+    private String attribute;
+
+    /*
+    @Cache must be on this Set and ALSO on the Item itself
+     */
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Item> items;
 }

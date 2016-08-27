@@ -14,6 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.SharedCacheMode;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -26,7 +27,7 @@ import java.util.Properties;
     @ComponentScan.Filter(
             type = FilterType.ASSIGNABLE_TYPE,
             classes = {DefaultCacheConfig.class, SecondLevelCacheConfig.class}))
-public class HibernateTestDatebaseConfig {
+public class TestDatabaseConfig {
 
     @Value("${db.driverClassName}")
     private String dbDriverClassName;
@@ -65,6 +66,15 @@ public class HibernateTestDatebaseConfig {
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("com.skronawi.spring.examples.caching.hibernate");
         factory.setDataSource(dataSource());
+
+        /*
+        https://docs.oracle.com/javaee/7/api/javax/persistence/SharedCacheMode.html
+        http://docs.oracle.com/javaee/6/tutorial/doc/gkjjj.html
+
+        SharedCacheMode.ALL means: All entities and entity-related state and data are cached.
+        items can also be selectively in- and excluded from caching!!
+         */
+        factory.setSharedCacheMode(SharedCacheMode.ALL);
 
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", dbHbm2ddl);

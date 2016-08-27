@@ -1,6 +1,6 @@
 package com.skronawi.spring.examples.caching.hibernate.firstlevel;
 
-import com.skronawi.spring.examples.caching.hibernate.HibernateTestDatebaseConfig;
+import com.skronawi.spring.examples.caching.hibernate.TestDatabaseConfig;
 import com.skronawi.spring.examples.caching.hibernate.Item;
 import com.skronawi.spring.examples.caching.hibernate.ItemManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
 
-@ContextConfiguration(classes = {HibernateTestDatebaseConfig.class, DefaultCacheConfig.class})
-public class HibernateFirstLevelCachingTest extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(classes = {TestDatabaseConfig.class, DefaultCacheConfig.class})
+public class FirstLevelCachingTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private ItemManager itemManager;
@@ -105,4 +106,36 @@ public class HibernateFirstLevelCachingTest extends AbstractTestNGSpringContextT
 //        item = itemManager.create(item);
 //        itemManager.deleteNTimesInTransaction(item.getId(), 10);
 //    }
+
+    @Test
+    public void twoInterferingQueries() throws Exception{
+
+        CountDownLatch updateWaitLatch = new CountDownLatch(1);
+        CountDownLatch secondGetWaitLatch = new CountDownLatch(1);
+        CountDownLatch testLatch = new CountDownLatch(1);
+
+        new Thread(
+                () -> {
+                    //the in-transaction get() calls are not aware of the out-of-transaction update
+                    itemManager.get2TimesInTransactionAndWaitBetweenAndAssertEqualValues(createdItem.getId(),
+                            secondGetWaitLatch, updateWaitLatch);
+                    testLatch.countDown();
+                }).start();
+
+        new Thread(
+                () -> {
+                    try {
+                        updateWaitLatch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    createdItem.setValue("updated2");
+                    createdItem = itemManager.update(createdItem);
+                    System.out.println("updated the item");
+                    secondGetWaitLatch.countDown();
+                }
+        ).start();
+
+        testLatch.await();
+    }
 }

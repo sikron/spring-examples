@@ -20,5 +20,8 @@ public interface ItemRepository extends CrudRepository<Item, String> {
     //see e.g. http://forum.spring.io/forum/spring-projects/data/106093-query-caching
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     @Query("select i from Item i where i.value = :value")
-    Item queryByValue(@Param("value") String value);
+    Set<Item> queryByValue(@Param("value") String value);
+
+    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
+    Set<Item> findByValue(String value);
 }
