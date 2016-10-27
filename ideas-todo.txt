@@ -3,26 +3,11 @@ websockets
 
 spring data for solr
 
-messaging
-- jmx
-- redis
-- amqp
-
 jsp
 - really go on? e.g. checkbox is a PITA
-
-soap
-- maven plugin for code-generation by WSDL
 
 jsf
 
 thymeleaf
 
-start of webapp, with security!
-- web.xml
-- extends AbstractAnnotationConfigDispatcherServletInitializer
-- implements WebApplicationInitializer
-
 service-config by xml
-
-liquibase or flyway
