@@ -26,17 +26,15 @@ public class SectAuthenticationFilter extends RequestHeaderAuthenticationFilter 
 
         //FIXME put this part into the SectTokenUserDetailsService, AuthenticationExceptions there are handled
 
-//        if (authorizationHeaderValue == null || authorizationHeaderValue.equals("")) {
-//            throw new IllegalArgumentException("no authorization value");
-//        }
-//
-//        if (!authorizationHeaderValue.startsWith("sect ")) {
-//            throw new IllegalArgumentException("authorization value has wrong format");
-//        }
-//
-//        authorizationHeaderValue = authorizationHeaderValue.replace("sect ", "");
-//        return authorizationHeaderValue;
+        if (authorizationHeaderValue == null || authorizationHeaderValue.equals("")) {
+            throw new IllegalArgumentException("no authorization value");
+        }
 
+        if (!authorizationHeaderValue.startsWith("sect ")) {
+            throw new IllegalArgumentException("authorization value has wrong format");
+        }
+
+        authorizationHeaderValue = authorizationHeaderValue.replace("sect ", "");
         return authorizationHeaderValue;
     }
 }

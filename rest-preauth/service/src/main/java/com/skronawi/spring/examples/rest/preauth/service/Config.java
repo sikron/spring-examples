@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
@@ -26,7 +27,12 @@ public class Config extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        http
+                //so that no session is created and every request is verified anew
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                //so that the PreAuthenticatedCredentialsNotFoundException is handled correctly
+//                .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
+                //now set up the pre-authentication stuff
                 .addFilterBefore(sectAuthenticationFilter(), RequestHeaderAuthenticationFilter.class)
                 .authenticationProvider(preauthAuthProvider())
                 .csrf().disable()

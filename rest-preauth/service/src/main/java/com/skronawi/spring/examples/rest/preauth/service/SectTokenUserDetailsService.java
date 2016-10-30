@@ -16,13 +16,13 @@ public class SectTokenUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         //FIXME this part should have been done in the SectAuthenticationFilter, but exceptions there cannot be handled in REST
-        if (username == null || username.equals("")) {
-            throw new AuthenticationCredentialsNotFoundException("no authorization value");
-        }
-        if (!username.startsWith("sect ")) {
-            throw new AuthenticationCredentialsNotFoundException("authorization value has wrong format");
-        }
-        username = username.replace("sect ", "");
+//        if (username == null || username.equals("")) {
+//            throw new AuthenticationCredentialsNotFoundException("no authorization value");
+//        }
+//        if (!username.startsWith("sect ")) {
+//            throw new AuthenticationCredentialsNotFoundException("authorization value has wrong format");
+//        }
+//        username = username.replace("sect ", "");
 
         if (!username.equals("abcd1234")) {
             throw new UsernameNotFoundException("user not found: " + username);
