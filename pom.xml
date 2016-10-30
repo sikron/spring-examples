@@ -32,6 +32,7 @@
         <module>valid</module>
         <module>security</module>
         <module>caching</module>
+        <module>rest-preauth</module>
     </modules>
 
     <build>
