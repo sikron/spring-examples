@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,11 +12,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
 @EnableWebMvc
@@ -30,22 +37,43 @@ public class Config extends WebSecurityConfigurerAdapter {
         http
                 //so that no session is created and every request is verified anew
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                //so that the PreAuthenticatedCredentialsNotFoundException is handled correctly
-//                .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
-                //now set up the pre-authentication stuff
+
+                //now set up the pre-authentication filter
                 .addFilterBefore(sectAuthenticationFilter(), RequestHeaderAuthenticationFilter.class)
+                //the following filter must catch exceptions coming from the sectAuthenticationFilter.
+                //they are NOT handled by the REST exception mappers
+                .addFilterBefore(sectAuthenticationFilterExceptionHandling(), SectAuthenticationFilter.class)
                 .authenticationProvider(preauthAuthProvider())
+
                 .csrf().disable()
-                .authorizeRequests().anyRequest().authenticated();
+        ;
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(preauthAuthProvider());
+    private OncePerRequestFilter sectAuthenticationFilterExceptionHandling() {
+        return new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest httpServletRequest,
+                                            HttpServletResponse httpServletResponse, FilterChain filterChain)
+                    throws ServletException, IOException {
+                try {
+                    filterChain.doFilter(httpServletRequest, httpServletResponse);
+                } catch (Exception e) {
+                    httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+                }
+            }
+        };
     }
 
-    @Bean
-    public UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken> userDetailsServiceWrapper() {
+    private SectAuthenticationFilter sectAuthenticationFilter() throws Exception {
+
+        SectAuthenticationFilter filter = new SectAuthenticationFilter();
+        filter.setAuthenticationManager(authenticationManager());
+        filter.setPrincipalRequestHeader("Authorization");
+        filter.setExceptionIfHeaderMissing(false);
+        return filter;
+    }
+
+    private UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken> userDetailsServiceWrapper() {
 
         UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken> wrapper =
                 new UserDetailsByNameServiceWrapper<>();
@@ -53,8 +81,7 @@ public class Config extends WebSecurityConfigurerAdapter {
         return wrapper;
     }
 
-    @Bean
-    public PreAuthenticatedAuthenticationProvider preauthAuthProvider() {
+    private PreAuthenticatedAuthenticationProvider preauthAuthProvider() {
 
         PreAuthenticatedAuthenticationProvider preauthAuthProvider =
                 new PreAuthenticatedAuthenticationProvider();
@@ -62,12 +89,9 @@ public class Config extends WebSecurityConfigurerAdapter {
         return preauthAuthProvider;
     }
 
-    @Bean
-    public SectAuthenticationFilter sectAuthenticationFilter() throws Exception {
-
-        SectAuthenticationFilter filter = new SectAuthenticationFilter();
-        filter.setAuthenticationManager(authenticationManager());
-        return filter;
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(preauthAuthProvider());
     }
 
     @Bean

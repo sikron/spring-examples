@@ -33,17 +33,17 @@ public class PreAuthenticationTest extends AbstractTestNGSpringContextTests {
                 .build();
     }
 
-    //FIXME, the request will not even come back, but a internal PreAuthenticatedCredentialsNotFoundException is thrown
+    //this 403 is due to a IllegalArgumentException from the SectAuthenticationFilter, catched in a earlier filter
     @Test
     public void testNoAuthHeader() throws Exception {
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/treasure");
 
         ResultActions resultActions = mockMvc.perform(requestBuilder);
-        resultActions.andExpect(MockMvcResultMatchers.status().isForbidden()); //TODO should that not be 401 ?
+        resultActions.andExpect(MockMvcResultMatchers.status().isForbidden()); //FIXME should that not be 401 ?
     }
 
-    //FIXME, the request will not even come back, but a internal PreAuthenticatedCredentialsNotFoundException is thrown
+    //this 403 is due to a IllegalArgumentException from the SectAuthenticationFilter, catched in a earlier filter
     @Test
     public void testNoSectAuthHeader() throws Exception {
 
@@ -51,9 +51,10 @@ public class PreAuthenticationTest extends AbstractTestNGSpringContextTests {
         requestBuilder.header("Authorization", "abcd1234");
 
         ResultActions resultActions = mockMvc.perform(requestBuilder);
-        resultActions.andExpect(MockMvcResultMatchers.status().isForbidden()); //TODO should that not be 401 ?
+        resultActions.andExpect(MockMvcResultMatchers.status().isForbidden()); //FIXME should that not be 401 ?
     }
 
+    //this 403 is due to a UsernameNotFoundException from the SectTokenUserDetailsService
     @Test
     public void testWrongAuthHeader() throws Exception {
 
@@ -61,7 +62,7 @@ public class PreAuthenticationTest extends AbstractTestNGSpringContextTests {
         requestBuilder.header("Authorization", "sect abcd1234_wrong");
 
         ResultActions resultActions = mockMvc.perform(requestBuilder);
-        resultActions.andExpect(MockMvcResultMatchers.status().isForbidden()); //TODO should that not be 401 ?
+        resultActions.andExpect(MockMvcResultMatchers.status().isForbidden()); //FIXME should that not be 401 ?
     }
 
     @Test
