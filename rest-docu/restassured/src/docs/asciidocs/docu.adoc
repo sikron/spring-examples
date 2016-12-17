@@ -22,9 +22,9 @@ include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/http
  
 include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/request-parameters.adoc[]
  
-//==== Response fields
-//
-//include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/response-fields.adoc[]
+==== Response fields
+
+include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/response-fields.adoc[]
  
 ==== Example response
  
@@ -33,22 +33,3 @@ include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/http
 ==== CURL request
  
 include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/curl-request.adoc[]
- 
-//=== Accessing the greeting GET with default content
-//
-//==== Request structure
-//
-//include::{snippets}/my-resource-rest-assured-test/greeting-get-with-default-content/http-request.adoc[]
-//
-//==== Response fields
-//
-//include::{snippets}/my-resource-rest-assured-test/greeting-get-with-default-content/response-fields.adoc[]
-//
-//==== Example response
-//
-//include::{snippets}/my-resource-rest-assured-test/greeting-get-with-default-content/http-response.adoc[]
-//
-//==== CURL request
-//
-//include::{snippets}/my-resource-rest-assured-test/greeting-get-with-default-content/curl-request.adoc[]
- 

@@ -16,39 +16,28 @@ The Greeting provides the entry point into the service.
  
 ==== Request structure
  
-include::{snippets}/my-resource-mvc-test/test-greetings-with-param/http-request.adoc[]
+include::{snippets}/greetings-resource-mvc-test/test-complete-get-greeting/http-request.adoc[]
  
 ==== Request parameters
  
-include::{snippets}/my-resource-mvc-test/test-greetings-with-param/request-parameters.adoc[]
+include::{snippets}/greetings-resource-mvc-test/test-complete-get-greeting/request-parameters.adoc[]
  
-//==== Response fields
-//
-//include::{snippets}/my-resource-mvc-test/test-greetings-with-param/response-fields.adoc[]
+==== Response fields
+
+include::{snippets}/greetings-resource-mvc-test/test-complete-get-greeting/response-fields.adoc[]
+
+==== Request headers
+
+include::{snippets}/greetings-resource-mvc-test/test-complete-get-greeting/request-headers.adoc[]
+
+==== Response headers
+
+include::{snippets}/greetings-resource-mvc-test/test-complete-get-greeting/response-headers.adoc[]
  
 ==== Example response
  
-include::{snippets}/my-resource-mvc-test/test-greetings-with-param/http-response.adoc[]
+include::{snippets}/greetings-resource-mvc-test/test-complete-get-greeting/http-response.adoc[]
  
 ==== CURL request
  
-include::{snippets}/my-resource-mvc-test/test-greetings-with-param/curl-request.adoc[]
- 
-//=== Accessing the greeting GET with default content
-//
-//==== Request structure
-//
-//include::{snippets}/my-resource-mvc-test/greeting-get-with-default-content/http-request.adoc[]
-//
-//==== Response fields
-//
-//include::{snippets}/my-resource-mvc-test/greeting-get-with-default-content/response-fields.adoc[]
-//
-//==== Example response
-//
-//include::{snippets}/my-resource-mvc-test/greeting-get-with-default-content/http-response.adoc[]
-//
-//==== CURL request
-//
-//include::{snippets}/my-resource-mvc-test/greeting-get-with-default-content/curl-request.adoc[]
- 
+include::{snippets}/greetings-resource-mvc-test/test-complete-get-greeting/curl-request.adoc[]
