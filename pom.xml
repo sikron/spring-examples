@@ -33,6 +33,7 @@
         <module>security</module>
         <module>caching</module>
         <module>rest-preauth</module>
+        <module>rest-docu</module>
     </modules>
 
     <build>
