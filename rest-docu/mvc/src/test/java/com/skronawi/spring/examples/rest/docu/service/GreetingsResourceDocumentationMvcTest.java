@@ -13,30 +13,42 @@ import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.PayloadDocumentation;
-import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.restdocs.request.RequestDocumentation;
+import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import java.util.Arrays;
+import java.util.List;
 
+/*
+see http://docs.spring.io/spring-restdocs/docs/1.1.2.RELEASE/reference/html5/ for more info
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = WebConfig.class)
 @WebAppConfiguration
 public class GreetingsResourceDocumentationMvcTest {
+
+    //field descriptors are re-usable, especially also within a array
+    private static final List<FieldDescriptor> GREETING_FIELD_DESCRIPTORS = Arrays.asList(
+            PayloadDocumentation.fieldWithPath("name").description("the name of the one, who has been greeted")
+                    .type(JsonFieldType.STRING),
+            PayloadDocumentation.fieldWithPath("id").description("the id of the greeting")
+                    .type(JsonFieldType.STRING),
+            PayloadDocumentation.fieldWithPath("timestamp").description("when the greeting was performed")
+                    .type(JsonFieldType.STRING)
+    );
 
     @Rule
     public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
@@ -52,7 +64,7 @@ public class GreetingsResourceDocumentationMvcTest {
     public void setUp() throws Exception {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-                .apply(documentationConfiguration(this.restDocumentation))
+                .apply(MockMvcRestDocumentation.documentationConfiguration(this.restDocumentation))
                 .build();
 
         objectMapper = new ObjectMapper();
@@ -86,20 +98,14 @@ public class GreetingsResourceDocumentationMvcTest {
 
                 .andDo(MockMvcRestDocumentation.document("{class-name}/{method-name}",
 
+                        //TODO centralize this prettyPrinting and {class-name}/{method-name} in the setup()
                         Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
 
                         RequestDocumentation.pathParameters(RequestDocumentation.parameterWithName("id")
                                 .description("the id of the greeting to get")),
 
-                        PayloadDocumentation.responseFields(
-                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who has been greeted")
-                                        .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("id").description("the id of the greeting")
-                                        .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("timestamp").description("when the greeting was performed")
-                                        .type(JsonFieldType.STRING))
-                        )
+                        PayloadDocumentation.responseFields(GREETING_FIELD_DESCRIPTORS))
                 );
     }
 
@@ -115,7 +121,7 @@ public class GreetingsResourceDocumentationMvcTest {
 //                .andExpect(MockMvcResultMatchers.jsonPath("[0].name", CoreMatchers.is("prepared")))
 //                .andExpect(MockMvcResultMatchers.jsonPath("[0].id", CoreMatchers.notNullValue()))
 //                .andExpect(MockMvcResultMatchers.jsonPath("[0].timestamp", CoreMatchers.notNullValue()))
-
+                //XOR
                 //tests all at once, so the matchers will get arrays!!
 //                .andExpect(MockMvcResultMatchers.jsonPath("$[*].name", CoreMatchers.everyItem(CoreMatchers.is("prepared"))))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].id", CoreMatchers.everyItem(CoreMatchers.notNullValue())))
@@ -133,15 +139,50 @@ public class GreetingsResourceDocumentationMvcTest {
                         PayloadDocumentation.responseFields(
                                 //also document the list itself
                                 PayloadDocumentation.fieldWithPath("[]").description("the set of all greetings")
-                                        .type(JsonFieldType.ARRAY)
-//                                ,PayloadDocumentation.fieldWithPath("[].name").description("the name of the one, who has been greeted")
-//                                        .type(JsonFieldType.STRING),
-//                                PayloadDocumentation.fieldWithPath("[].id").description("the id of the greeting")
-//                                        .type(JsonFieldType.STRING),
-//                                PayloadDocumentation.fieldWithPath("[].timestamp").description("when the greeting was performed")
-//                                        .type(JsonFieldType.STRING)
-                            )
-                        )
+                                        .type(JsonFieldType.ARRAY))
+                                .andWithPrefix("[].", GREETING_FIELD_DESCRIPTORS))
+                );
+    }
+
+    @Test
+    public void testFindGreetingsByName() throws Exception{
+
+        Greeting greeting = new Greeting();
+        greeting.setName("ina");
+        String greetingJson = objectMapper.writeValueAsString(greeting);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/greetings").header("Authorization", "foo")
+                        .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/greetings").param("name", "ina"))
+
+                .andExpect(MockMvcResultMatchers.status().isOk())
+
+                //tests all at once, so the matchers will get arrays!!
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].name", CoreMatchers.everyItem(CoreMatchers.is("ina"))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].id", CoreMatchers.everyItem(CoreMatchers.notNullValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].timestamp", CoreMatchers.everyItem(CoreMatchers.notNullValue())))
+
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+
+                .andDo(MockMvcRestDocumentation.document("{class-name}/{method-name}",
+
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+
+                        RequestDocumentation.requestParameters(RequestDocumentation.parameterWithName("name")
+                                .description("the name to search greetings for")),
+
+                        PayloadDocumentation.responseFields(
+                                //also document the list itself
+                                PayloadDocumentation.fieldWithPath("[]").description("the set of all greetings")
+                                        .type(JsonFieldType.ARRAY))
+                                //and re-use the documentation of the greetings object with a prefix
+                                .andWithPrefix("[].", GREETING_FIELD_DESCRIPTORS))
                 );
     }
 
@@ -168,17 +209,17 @@ public class GreetingsResourceDocumentationMvcTest {
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
 
                         PayloadDocumentation.requestFields(
-                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who should be greeted"),
+
+                                //customize the table a little, see also rest-docu/mvc/src/test/resources/org/springframework/restdocs/templates/asciidoctor/request-fields.snippet
+                                Attributes.attributes(Attributes.key("title").value("Fields for creating a greeting")),
+                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who should be greeted")
+                                        //add a extra columns with constraints
+                                        .attributes(Attributes.key("constraints").value("must not be null or empty")),
+
                                 PayloadDocumentation.fieldWithPath("id").ignored(),
                                 PayloadDocumentation.fieldWithPath("timestamp").ignored()),
 
-                        PayloadDocumentation.responseFields(
-                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who has been greeted")
-                                        .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("id").description("the id of the greeting")
-                                        .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("timestamp").description("when the greeting was performed")
-                                        .type(JsonFieldType.STRING)),
+                        PayloadDocumentation.responseFields(GREETING_FIELD_DESCRIPTORS),
 
                         HeaderDocumentation.requestHeaders(HeaderDocumentation.headerWithName("Authorization")
                                 .description("the authorization value")),
