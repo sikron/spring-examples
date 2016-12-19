@@ -6,17 +6,30 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @RestController
 @RequestMapping(path = "/greetings")
 public class GreetingsResource {
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            headers = {"Authorization"})
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Greeting> getGreeting(@RequestParam(defaultValue = "stranger") String name) {
+    private Map<String, Greeting> id2Greeting = new HashMap<>();
 
-        Greeting greeting = new Greeting();
-        greeting.setName(name);
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE, headers = {"Authorization"})
+    public ResponseEntity<Greeting> createGreeting(@RequestBody Greeting greeting) {
+
+        if (greeting == null) {
+            throw new IllegalArgumentException("greeting must not be null");
+        }
+        if (greeting.getName() == null || greeting.getName().length() == 0) {
+            throw new IllegalArgumentException("a greeting must have a valid name");
+        }
+        greeting.setId(UUID.randomUUID().toString());
+        greeting.setTimestamp(new Date());
+
+        id2Greeting.put(greeting.getId(), greeting);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("dummy-response-header", "bar");
@@ -24,4 +37,28 @@ public class GreetingsResource {
         return new ResponseEntity<>(greeting, httpHeaders, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Set<Greeting> getGreetings(@RequestParam(required = false) String name) {
+
+        Stream<Greeting> stream = id2Greeting.values().stream();
+
+        if (name == null || name.length() == 0) {
+            return stream.collect(Collectors.toSet());
+        }
+
+        return findGreetingsByName(stream, name);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            path = "/{id}")
+    @ResponseBody
+    public Greeting getGreeting(@PathVariable String id) {
+
+        return id2Greeting.get(id);
+    }
+
+    private Set<Greeting> findGreetingsByName(Stream<Greeting> stream, String name) {
+        return stream.filter(greeting -> greeting.getName().equalsIgnoreCase(name)).collect(Collectors.toSet());
+    }
 }
