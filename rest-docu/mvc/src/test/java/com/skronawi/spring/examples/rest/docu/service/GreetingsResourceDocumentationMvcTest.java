@@ -197,7 +197,7 @@ public class GreetingsResourceDocumentationMvcTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/greetings").header("Authorization", "foo")
                         .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/greetings").param("name", "ina"))

@@ -39,6 +39,7 @@ public class GreetingsResource {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public Set<Greeting> getGreetings(@RequestParam(required = false) String name) {
 
         Stream<Greeting> stream = id2Greeting.values().stream();
@@ -53,6 +54,7 @@ public class GreetingsResource {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             path = "/{id}")
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public Greeting getGreeting(@PathVariable String id) {
 
         return id2Greeting.get(id);
