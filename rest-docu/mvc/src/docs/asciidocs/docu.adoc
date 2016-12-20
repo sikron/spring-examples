@@ -78,10 +78,6 @@ include::{snippets}/greetings-resource-documentation-mvc-test/test-get-all-greet
 
 include::{snippets}/greetings-resource-documentation-mvc-test/test-get-all-greetings/response-fields.adoc[]
 
-==== Request parameters
-
-include::{snippets}/greetings-resource-documentation-mvc-test/test-get-all-greetings/request-parameters.adoc[]
-
 === Search for greetings
 
 ==== CURL request
@@ -99,6 +95,10 @@ include::{snippets}/greetings-resource-documentation-mvc-test/test-find-greeting
 ==== Response fields
 
 include::{snippets}/greetings-resource-documentation-mvc-test/test-find-greetings-by-name/response-fields.adoc[]
+
+==== Request parameters
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-find-greetings-by-name/request-parameters.adoc[]
 
 === Getting a single greeting
 

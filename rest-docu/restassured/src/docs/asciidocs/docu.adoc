@@ -1,4 +1,4 @@
-= Greeting REST Service API Guide (RESTassured)
+= Greeting REST Service API Guide (MockMVC)
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -12,24 +12,112 @@
  
 The Greeting provides the entry point into the service.
  
-=== Accessing the greeting GET with provided content
+=== Creating a greeting
+
+==== CURL request
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting/curl-request.adoc[]
  
 ==== Request structure
  
-include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/http-request.adoc[]
- 
-==== Request parameters
- 
-include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/request-parameters.adoc[]
- 
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting/http-response.adoc[]
+
+==== Request fields
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting/request-fields.adoc[]
+
+==== Request headers
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting/request-headers.adoc[]
+
 ==== Response fields
 
-include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/response-fields.adoc[]
- 
-==== Example response
- 
-include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/http-response.adoc[]
- 
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting/response-fields.adoc[]
+
+==== Response headers
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting/response-headers.adoc[]
+
+=== Creating a greeting without name results in an error
+
 ==== CURL request
- 
-include::{snippets}/my-resource-rest-assured-test/test-greetings-with-param/curl-request.adoc[]
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting-without-name-results-in-error/curl-request.adoc[]
+
+==== Request structure
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting-without-name-results-in-error/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting-without-name-results-in-error/http-response.adoc[]
+
+==== Response fields
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-create-greeting-without-name-results-in-error/response-fields.adoc[]
+
+=== Getting all greetings
+
+==== CURL request
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-all-greetings/curl-request.adoc[]
+
+==== Request structure
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-all-greetings/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-all-greetings/http-response.adoc[]
+
+==== Response fields
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-all-greetings/response-fields.adoc[]
+
+=== Search for greetings
+
+==== CURL request
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-find-greetings-by-name/curl-request.adoc[]
+
+==== Request structure
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-find-greetings-by-name/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-find-greetings-by-name/http-response.adoc[]
+
+==== Response fields
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-find-greetings-by-name/response-fields.adoc[]
+
+==== Request parameters
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-find-greetings-by-name/request-parameters.adoc[]
+
+=== Getting a single greeting
+
+==== CURL request
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-single-greeting/curl-request.adoc[]
+
+==== Request structure
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-single-greeting/http-request.adoc[]
+
+==== Path parameters
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-single-greeting/path-parameters.adoc[]
+
+==== Example response
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-single-greeting/http-response.adoc[]
+
+==== Response fields
+
+include::{snippets}/greetings-resource-documentation-mvc-test/test-get-single-greeting/response-fields.adoc[]

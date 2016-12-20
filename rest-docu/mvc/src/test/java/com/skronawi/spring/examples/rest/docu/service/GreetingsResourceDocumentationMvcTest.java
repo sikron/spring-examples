@@ -13,6 +13,7 @@ import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -32,8 +33,13 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
 import java.util.List;
 
-/*
-see http://docs.spring.io/spring-restdocs/docs/1.1.2.RELEASE/reference/html5/ for more info
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+
+/**
+ * this class is intended for actually generating a complete docu of the {@link GreetingsResource}. the other "sandbox"
+ * test is intended for testing some single/particular things.
+ *
+ * see http://docs.spring.io/spring-restdocs/docs/1.1.2.RELEASE/reference/html5/ for more info
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = WebConfig.class)
@@ -59,12 +65,18 @@ public class GreetingsResourceDocumentationMvcTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
     private Greeting preparedGreeting;
+    private RestDocumentationResultHandler document;
 
     @Before
     public void setUp() throws Exception {
 
+        this.document = MockMvcRestDocumentation.document("{class-name}/{method-name}",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()));
+
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
                 .apply(MockMvcRestDocumentation.documentationConfiguration(this.restDocumentation))
+                .alwaysDo(document)
                 .build();
 
         objectMapper = new ObjectMapper();
@@ -96,11 +108,7 @@ public class GreetingsResourceDocumentationMvcTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp", CoreMatchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
 
-                .andDo(MockMvcRestDocumentation.document("{class-name}/{method-name}",
-
-                        //TODO centralize this prettyPrinting and {class-name}/{method-name} in the setup()
-                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                .andDo(document.document(
 
                         RequestDocumentation.pathParameters(RequestDocumentation.parameterWithName("id")
                                 .description("the id of the greeting to get")),
@@ -131,10 +139,7 @@ public class GreetingsResourceDocumentationMvcTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
 
-                .andDo(MockMvcRestDocumentation.document("{class-name}/{method-name}",
-
-                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                .andDo(document.document(
 
                         PayloadDocumentation.responseFields(
                                 //also document the list itself
@@ -169,10 +174,7 @@ public class GreetingsResourceDocumentationMvcTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
 
-                .andDo(MockMvcRestDocumentation.document("{class-name}/{method-name}",
-
-                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                .andDo(document.document(
 
                         RequestDocumentation.requestParameters(RequestDocumentation.parameterWithName("name")
                                 .description("the name to search greetings for")),
@@ -203,10 +205,7 @@ public class GreetingsResourceDocumentationMvcTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp", CoreMatchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
 
-                .andDo(MockMvcRestDocumentation.document("{class-name}/{method-name}",
-
-                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                .andDo(document.document(
 
                         PayloadDocumentation.requestFields(
 
@@ -230,6 +229,7 @@ public class GreetingsResourceDocumentationMvcTest {
                 );
     }
 
+    //documentation of an error response
     @Test
     public void testCreateGreetingWithoutNameResultsInError() throws Exception {
 
@@ -242,10 +242,7 @@ public class GreetingsResourceDocumentationMvcTest {
 
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
 
-                .andDo(MockMvcRestDocumentation.document("{class-name}/{method-name}",
-
-                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                .andDo(document.document(
 
                         PayloadDocumentation.responseFields(
                                 PayloadDocumentation.fieldWithPath("message").description("the error message")

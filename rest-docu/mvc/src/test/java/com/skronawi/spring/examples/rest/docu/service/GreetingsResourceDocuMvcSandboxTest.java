@@ -20,6 +20,7 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.request.RequestDocumentation;
+import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -33,7 +34,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 
 /*
 just a few tests, which show different things, which are noteworthy or different to the "good case".
-they have to be enabled manually!
+they have to be enabled manually by out-commenting the @Ignore!
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = WebConfig.class)
@@ -53,23 +54,47 @@ public class GreetingsResourceDocuMvcSandboxTest {
     @Before
     public void setUp(){
 
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-                .apply(documentationConfiguration(this.restDocumentation))
-                //TODO in the test a id has to be given nevertheless. how to omit this and use this central config?
-//                .alwaysDo(MockMvcRestDocumentation.document("{class-name}/{method-name}"))
-                .build();
-
         this.document = MockMvcRestDocumentation.document("{class-name}/{method-name}",
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
-        );
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()));
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
+                .apply(documentationConfiguration(this.restDocumentation))
+                .alwaysDo(document)
+                .build();
 
         objectMapper = new ObjectMapper();
     }
 
-    @Ignore // only generates request-fields.adoc, request-headers.adoc, response-fields.adoc and response-headers.adoc!?
+    @Ignore //does not work without external request!?
     @Test
-    public void testUsePreparedDocumentResultHandler() throws Exception {
+    public void testExternalCallForDocumentationCreation() throws Exception{
+
+//        document.document(
+        document.snippets(
+                PayloadDocumentation.requestFields(
+                        //customize the table a little, see also rest-docu/mvc/src/test/resources/org/springframework/restdocs/templates/asciidoctor/request-fields.snippet
+                        Attributes.attributes(Attributes.key("title").value("Fields for creating a greeting")),
+                        PayloadDocumentation.fieldWithPath("name").description("the name of the one, who should be greeted")
+                                //add a extra columns with constraints
+                                .attributes(Attributes.key("constraints").value("must not be null or empty")),
+                        PayloadDocumentation.fieldWithPath("id").ignored(),
+                        PayloadDocumentation.fieldWithPath("timestamp").ignored()),
+
+                PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("name").description("the name of the one, who has been greeted")
+                                .type(JsonFieldType.STRING),
+                        PayloadDocumentation.fieldWithPath("id").description("the id of the greeting")
+                                .type(JsonFieldType.STRING),
+                        PayloadDocumentation.fieldWithPath("timestamp").description("when the greeting was performed")
+                                .type(JsonFieldType.STRING)),
+
+                HeaderDocumentation.requestHeaders(HeaderDocumentation.headerWithName("Authorization")
+                        .description("the authorization value")),
+
+                HeaderDocumentation.responseHeaders(HeaderDocumentation.headerWithName("dummy-response-header")
+                        .description("a dummy response header"))
+        );
 
         Greeting greeting = new Greeting();
         greeting.setName("simon");
@@ -77,58 +102,18 @@ public class GreetingsResourceDocuMvcSandboxTest {
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/greetings").header("Authorization", "foo")
-                .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
 
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is("simon")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp", CoreMatchers.notNullValue()))
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-
-                .andDo(document.document(
-                        PayloadDocumentation.requestFields(
-                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who should be greeted"),
-                                PayloadDocumentation.fieldWithPath("id").ignored(),
-                                PayloadDocumentation.fieldWithPath("timestamp").ignored()),
-
-                        PayloadDocumentation.responseFields(
-                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who has been greeted")
-                                        .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("id").description("the id of the greeting")
-                                        .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("timestamp").description("when the greeting was performed")
-                                        .type(JsonFieldType.STRING)),
-
-                        HeaderDocumentation.requestHeaders(HeaderDocumentation.headerWithName("Authorization")
-                                .description("the authorization value")),
-
-                        HeaderDocumentation.responseHeaders(HeaderDocumentation.headerWithName("dummy-response-header")
-                                .description("a dummy response header"))
-                        )
-                );
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
-    @Ignore //does not work without request!? maybe the examples are old:
-    //- https://ordina-jworks.github.io/conference/2016/06/30/SpringIO16-Spring-Rest-Docs.html
-    //- http://www.baeldung.com/spring-rest-docs
+    @Ignore //just for example purposes, how hypermedia links can be documented
     @Test
-    public void testExternalDocumentationCreation() throws Exception{
-
-        // just a dummy documentation
-
-        document.snippets(
-                RequestDocumentation.requestParameters(RequestDocumentation.parameterWithName("name")
-                        .description("the name of the one, who should be greeted")),
-                PayloadDocumentation.responseFields(PayloadDocumentation.fieldWithPath("name")
-                        .description("the name of the one, who has been greeted").type(JsonFieldType.STRING))
-        );
-    }
-
-    @Ignore //just for docu purposes, how hypermedia links can be documented
-    @Test
-    public void testHypermediaDocu() throws Exception{
-
-        // just a dummy documentation
+    public void testHypermediaDocuExample() throws Exception{
 
         document.snippets(
                 HypermediaDocumentation.links(
@@ -167,7 +152,11 @@ public class GreetingsResourceDocuMvcSandboxTest {
 
                 .andDo(document.document(
                         PayloadDocumentation.requestFields(
-                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who should be greeted"),
+                                //customize the table a little, see also rest-docu/mvc/src/test/resources/org/springframework/restdocs/templates/asciidoctor/request-fields.snippet
+                                Attributes.attributes(Attributes.key("title").value("Fields for creating a greeting")),
+                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who should be greeted")
+                                        //add a extra columns with constraints
+                                        .attributes(Attributes.key("constraints").value("must not be null or empty")),
                                 PayloadDocumentation.fieldWithPath("id").ignored(),
                                 PayloadDocumentation.fieldWithPath("timestamp").ignored()),
 
