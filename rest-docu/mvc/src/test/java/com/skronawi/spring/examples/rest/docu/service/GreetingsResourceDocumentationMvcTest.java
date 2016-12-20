@@ -33,8 +33,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-
 /**
  * this class is intended for actually generating a complete docu of the {@link GreetingsResource}. the other "sandbox"
  * test is intended for testing some single/particular things.
@@ -87,9 +85,50 @@ public class GreetingsResourceDocumentationMvcTest {
         MvcResult preparedGreetingResult = mockMvc.perform(
                 MockMvcRequestBuilders.post("/greetings").header("Authorization", "foo")
                         .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
         preparedGreeting = objectMapper.readValue(preparedGreetingResult.getResponse().getContentAsString(),
                 Greeting.class);
+    }
+
+    @Test
+    public void testCreateGreeting() throws Exception {
+
+        Greeting greeting = new Greeting();
+        greeting.setName("simon");
+        String greetingJson = objectMapper.writeValueAsString(greeting);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/greetings").header("Authorization", "foo")
+                        .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
+
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is("simon")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp", CoreMatchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+
+                .andDo(document.document(
+
+                        PayloadDocumentation.requestFields(
+
+                                //customize the table a little, see also rest-docu/mvc/src/test/resources/org/springframework/restdocs/templates/asciidoctor/request-fields.snippet
+                                Attributes.attributes(Attributes.key("title").value("Fields for creating a greeting")),
+                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who should be greeted")
+                                        //add a extra columns with constraints
+                                        .attributes(Attributes.key("constraints").value("must not be null or empty")),
+
+                                PayloadDocumentation.fieldWithPath("id").ignored(),
+                                PayloadDocumentation.fieldWithPath("timestamp").ignored()),
+
+                        PayloadDocumentation.responseFields(GREETING_FIELD_DESCRIPTORS),
+
+                        HeaderDocumentation.requestHeaders(HeaderDocumentation.headerWithName("Authorization")
+                                .description("the authorization value")),
+
+                        HeaderDocumentation.responseHeaders(HeaderDocumentation.headerWithName("dummy-response-header")
+                                .description("a dummy response header"))
+                        )
+                );
     }
 
     @Test
@@ -185,47 +224,6 @@ public class GreetingsResourceDocumentationMvcTest {
                                         .type(JsonFieldType.ARRAY))
                                 //and re-use the documentation of the greetings object with a prefix
                                 .andWithPrefix("[].", GREETING_FIELD_DESCRIPTORS))
-                );
-    }
-
-    @Test
-    public void testCreateGreeting() throws Exception {
-
-        Greeting greeting = new Greeting();
-        greeting.setName("simon");
-        String greetingJson = objectMapper.writeValueAsString(greeting);
-
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/greetings").header("Authorization", "foo")
-                        .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
-
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is("simon")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.notNullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp", CoreMatchers.notNullValue()))
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-
-                .andDo(document.document(
-
-                        PayloadDocumentation.requestFields(
-
-                                //customize the table a little, see also rest-docu/mvc/src/test/resources/org/springframework/restdocs/templates/asciidoctor/request-fields.snippet
-                                Attributes.attributes(Attributes.key("title").value("Fields for creating a greeting")),
-                                PayloadDocumentation.fieldWithPath("name").description("the name of the one, who should be greeted")
-                                        //add a extra columns with constraints
-                                        .attributes(Attributes.key("constraints").value("must not be null or empty")),
-
-                                PayloadDocumentation.fieldWithPath("id").ignored(),
-                                PayloadDocumentation.fieldWithPath("timestamp").ignored()),
-
-                        PayloadDocumentation.responseFields(GREETING_FIELD_DESCRIPTORS),
-
-                        HeaderDocumentation.requestHeaders(HeaderDocumentation.headerWithName("Authorization")
-                                .description("the authorization value")),
-
-                        HeaderDocumentation.responseHeaders(HeaderDocumentation.headerWithName("dummy-response-header")
-                                .description("a dummy response header"))
-                        )
                 );
     }
 

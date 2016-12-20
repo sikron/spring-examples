@@ -34,7 +34,7 @@ public class GreetingsResource {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("dummy-response-header", "bar");
 
-        return new ResponseEntity<>(greeting, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(greeting, httpHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

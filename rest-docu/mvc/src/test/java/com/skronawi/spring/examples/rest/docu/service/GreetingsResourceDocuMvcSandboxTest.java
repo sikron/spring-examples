@@ -104,7 +104,7 @@ public class GreetingsResourceDocuMvcSandboxTest {
                 MockMvcRequestBuilders.post("/greetings").header("Authorization", "foo")
                         .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
 
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is("simon")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp", CoreMatchers.notNullValue()))
@@ -144,7 +144,7 @@ public class GreetingsResourceDocuMvcSandboxTest {
                 MockMvcRequestBuilders.post("/greetings").header("Authorization", "foo")
                         .content(greetingJson).contentType(MediaType.APPLICATION_JSON_UTF8))
 
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is("simon")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp", CoreMatchers.notNullValue()))
