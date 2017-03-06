@@ -19,6 +19,7 @@
         <module>javaconfig</module>
         <module>deadletter</module>
         <module>mqc</module>
+        <module>qpid</module>
     </modules>
 
     <dependencies>

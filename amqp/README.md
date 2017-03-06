@@ -28,3 +28,4 @@ is a protocol for exchanging messages. It is supported e.g. in RabbitMQ
 * `deadletter` is an example, how to configure a dead-letter queue for a working queue, e.g. in case of time-to-live timeout
 * `multi-queue-client` is a client for using 3 different queues, one working queue, one retry-queue in case of
 client-processing-failure and one dead-letter queue for final gathering of undeliverable messages
+* `qpid` shows how to use Apache Qpid as embedded rabbitmq alternative when using AMQP, e.g. for integration tests
