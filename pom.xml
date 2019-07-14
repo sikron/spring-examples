@@ -25,15 +25,19 @@
         <module>microservices</module>
         <module>rest-auth</module>
         <module>rest-oauth</module>
-        <module>jsp</module>
         <module>jersey</module>
-        <module>soap</module>
         <module>amqp</module>
         <module>valid</module>
         <module>security</module>
         <module>caching</module>
         <module>rest-preauth</module>
         <module>rest-docu</module>
+
+        <!--not finished, parts are missing(?)-->
+        <!--<module>jsp</module>-->
+
+        <!--special handling needed, look in README.md-->
+        <!--<module>soap</module>-->
     </modules>
 
     <build>

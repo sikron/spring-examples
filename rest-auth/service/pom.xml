@@ -6,6 +6,7 @@
         <artifactId>parent</artifactId>
         <groupId>com.skronawi.spring-examples</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -46,6 +47,7 @@
                     <warSourceDirectory>service/src/main/webapp</warSourceDirectory>
                     <warName>spring-rest-auth-example</warName>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <attachClasses>true</attachClasses>
                 </configuration>
             </plugin>
             <plugin>

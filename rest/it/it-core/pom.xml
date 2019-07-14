@@ -6,6 +6,7 @@
         <artifactId>it-parent</artifactId>
         <groupId>com.skronawi.spring-examples</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,6 +35,7 @@
             <groupId>com.skronawi.spring-examples</groupId>
             <artifactId>service</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <classifier>classes</classifier>
         </dependency>
 
         <dependency>
